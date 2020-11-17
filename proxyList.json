@@ -1,0 +1,6 @@
+{
+  "/comicker": {
+    "address": "/comicker-service",
+    "timeout": 30000
+  }
+}
