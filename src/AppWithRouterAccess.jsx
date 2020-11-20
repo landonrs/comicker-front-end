@@ -18,6 +18,7 @@ const AppWithRouterAccess = () => {
       redirectUri={window.location.origin + "/login/callback"}
       onAuthRequired={onAuthRequired}
       pkce={true}
+      scopes={["openid", "profile", "groups"]}
     >
       <Route path="/" exact={true} component={Home} />
       <SecureRoute path="/protected" component={Protected} />
