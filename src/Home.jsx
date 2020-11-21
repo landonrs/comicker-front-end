@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Container,
   Paper,
   Avatar,
   AppBar,
@@ -13,6 +14,7 @@ import {
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CreateIcon from "@material-ui/icons/Create";
+import { getAllComics } from "./utils/comicker-client";
 
 const useStyles = makeStyles({
   root: {
@@ -24,8 +26,25 @@ const useStyles = makeStyles({
 const Home = () => {
   const [value, setValue] = React.useState(0);
   const { authState, authService } = useOktaAuth();
+  const [comics, setComics] = useState([]);
   const history = useHistory();
   const classes = useStyles();
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    getAllComics()
+      .then((data) => {
+        if (!isCancelled) {
+          const [comicList] = data;
+          setComics(comicList);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setComics([]);
+      });
+  }, []);
 
   if (authState.isPending) {
     return <div>Loading...</div>;
@@ -82,6 +101,19 @@ const Home = () => {
           <br />
           {button}
         </div>
+        {comics.map((comic) => {
+          console.log("setting comic panel");
+          return (
+            <Container maxWidth="xs" key={comic.comic.title}>
+              <Typography>{comic.comic.title}</Typography>
+              <img
+                className={classes.logo}
+                alt="comic"
+                src="/images/comic.jpg"
+              />
+            </Container>
+          );
+        })}
         <BottomNavigation
           value={value}
           onChange={(event, newValue) => {
