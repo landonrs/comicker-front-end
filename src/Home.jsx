@@ -121,7 +121,14 @@ const Home = () => {
           }}
           showLabels
         >
-          <BottomNavigationAction label="Start a comic" icon={<CreateIcon />} />
+          <BottomNavigationAction
+            label="Start a comic"
+            icon={
+              <IconButton onClick={() => history.push("/create")}>
+                <CreateIcon />
+              </IconButton>
+            }
+          />
         </BottomNavigation>
       </Paper>
     </>

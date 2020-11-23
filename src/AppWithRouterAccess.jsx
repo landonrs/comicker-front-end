@@ -4,6 +4,7 @@ import { Security, SecureRoute, LoginCallback } from "@okta/okta-react";
 import Home from "./Home";
 import SignIn from "./SignIn";
 import Protected from "./Protected";
+import ComicCreator from "./views/comicCreation/ComicCreator";
 
 const AppWithRouterAccess = () => {
   const history = useHistory();
@@ -22,6 +23,7 @@ const AppWithRouterAccess = () => {
     >
       <Route path="/" exact={true} component={Home} />
       <SecureRoute path="/protected" component={Protected} />
+      <SecureRoute path="/create" component={ComicCreator} />
       <Route
         path="/login"
         render={() => (
