@@ -1,6 +1,6 @@
 {
   "/comicker": {
-    "address": "/comicker-service",
+    "address": "{COMICKER_BASE_PATH}",
     "timeout": 30000
   }
 }
