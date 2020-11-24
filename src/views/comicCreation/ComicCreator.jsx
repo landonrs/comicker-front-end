@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { SketchPicker } from "react-color";
-import CanvasDraw from "react-canvas-draw";
 import { createComic } from "../../utils/comicker-client";
 import {
   Button,
@@ -12,12 +10,11 @@ import {
   DialogContent,
   TextField,
 } from "@material-ui/core";
+import PanelCreator from "../../common/PanelCreator";
 
 const ComicCreator = () => {
   const history = useHistory();
 
-  const [selectedColor, setSelectedColor] = useState("#444");
-  const [selectedBrushRadius, setSelectedBrushRadius] = useState(1);
   const [comicTitle, setComicTitle] = useState(null);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
   const [displayFinalDialog, setDisplayFinalDialog] = useState(false);
@@ -42,10 +39,6 @@ const ComicCreator = () => {
     setDisplayFinalDialog(true);
   };
 
-  const onColorChange = (event) => {
-    setSelectedColor(event.hex);
-  };
-
   const saveAndConfirm = () => {
     // TODO - encode image data
     setDisplayConfirmDialog(true);
@@ -60,12 +53,7 @@ const ComicCreator = () => {
 
   return (
     <div>
-      <SketchPicker color={selectedColor} onChangeComplete={onColorChange} />
-      <CanvasDraw
-        hideGrid={true}
-        brushColor={selectedColor}
-        brushRadius={selectedBrushRadius}
-      />
+      <PanelCreator />
       <Button color="primary" onClick={() => saveAndConfirm()}>
         Upload
       </Button>
