@@ -6,9 +6,9 @@ const getAllComics = () => {
   return client(`${BASE_PATH}/comics`);
 };
 
-const voteOnComic = (comicId) => {
+const voteOnComicPanel = (comicId, panelId) => {
   return client(`${BASE_PATH}/comics/${comicId}/vote`, {
-    body: {},
+    body: { panelId },
     method: "PUT",
   });
 };
@@ -26,4 +26,4 @@ const createComic = (comicData) => {
   });
 };
 
-export { getAllComics, createComic, addPanel, voteOnComic };
+export { getAllComics, createComic, addPanel, voteOnComicPanel };
