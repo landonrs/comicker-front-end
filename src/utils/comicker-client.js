@@ -7,17 +7,23 @@ const getAllComics = () => {
 };
 
 const voteOnComic = (comicId) => {
-  return client(`/comics/${comicId}/vote`, { body: {}, method: "PUT" });
+  return client(`${BASE_PATH}/comics/${comicId}/vote`, {
+    body: {},
+    method: "PUT",
+  });
 };
 
 const addPanel = (comic, previousPanelId, panelImage) => {
-  return client(`/comics/${comic.comicId}/addPanel`, {
+  return client(`${BASE_PATH}/comics/${comic.comicId}/addPanel`, {
     body: { comic, previousPanelId, panelImage },
   });
 };
 
 const createComic = (comicData) => {
-  return client(`/comics/create`, { body: { comicData }, method: "POST" });
+  return client(`${BASE_PATH}/comics/create`, {
+    body: { comicData },
+    method: "POST",
+  });
 };
 
-export { getAllComics };
+export { getAllComics, createComic, addPanel, voteOnComic };
