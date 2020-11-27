@@ -6,6 +6,7 @@ import SignIn from "./SignIn";
 import Protected from "./Protected";
 import ComicCreator from "./views/comicCreation/ComicCreator";
 import ComicPanelTracker from "./views/comicPanelView/ComicPanelTracker";
+import HeaderBar from "./common/HeaderBar";
 
 const AppWithRouterAccess = () => {
   const history = useHistory();
@@ -22,6 +23,7 @@ const AppWithRouterAccess = () => {
       pkce={true}
       scopes={["openid", "profile", "groups"]}
     >
+      <HeaderBar />
       <Route path="/" exact={true} component={Home} />
       <Route path="/view/:comicId" exact={true} component={ComicPanelTracker} />
       <SecureRoute path="/protected" component={Protected} />

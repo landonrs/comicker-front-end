@@ -18,7 +18,6 @@ import CreateIcon from "@material-ui/icons/Create";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import { getAllComics, voteOnComicPanel } from "./utils/comicker-client";
 import { getStartingPanel } from "./utils/comic-navigation-helper";
-import HeaderBar from "./common/HeaderBar";
 
 const useStyles = makeStyles({
   root: {
@@ -65,7 +64,6 @@ const Home = () => {
 
   return (
     <>
-      <HeaderBar />
       <Paper className={classes.root}>
         {comics.map((comicData) => {
           console.log("setting comic panel");

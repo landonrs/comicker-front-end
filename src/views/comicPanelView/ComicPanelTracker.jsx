@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
-import HeaderBar from "../../common/HeaderBar";
 import ComicPanel from "./components/ComicPanel";
 import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
@@ -137,7 +136,6 @@ const ComicPanelTracker = (props) => {
 
   return (
     <div className={classes.root} {...handlers}>
-      <HeaderBar />
       <Slide direction={slideDirection} in={slideIn}>
         <div>
           <ComicPanel
