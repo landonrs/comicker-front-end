@@ -6,6 +6,12 @@ import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
 import ComicTree from "../../utils/comic-tree";
+import { Slide } from "@material-ui/core";
+
+const DOWN = "down";
+const UP = "up";
+const LEFT = "left";
+const RIGHT = "right";
 
 const useStyles = makeStyles({
   root: {
@@ -29,6 +35,9 @@ const ComicPanelTracker = (props) => {
   // used to track ordering of all siblings of a parent
   const [currentColumnPanels, setCurrentColumnPanels] = useState([]);
 
+  const [slideDirection, setSlideDirection] = useState(RIGHT);
+  const [slideIn, setSlideIn] = useState(true);
+
   const [panelImageUris, setPanelImageUris] = useState({});
 
   const showPreviousPanel = (eventData) => {
@@ -36,11 +45,24 @@ const ComicPanelTracker = (props) => {
 
     if (previousPanelNode) {
       console.log("moving to previous panel", previousPanelNode);
+      setSlideDirection(LEFT);
+      // exit current panel
+      setSlideIn(false);
+
       setCurrentPanel(previousPanelNode.panelData);
       setCurrentColumnPanels(
         comicTree.getChildPanels(previousPanelNode.parentId)
       );
+
+      setTransitionTimeout(RIGHT);
     }
+  };
+
+  const setTransitionTimeout = (direction) => {
+    setTimeout(() => {
+      setSlideDirection(direction);
+      setSlideIn(true);
+    }, 250);
   };
 
   const showNextPanel = (eventData) => {
@@ -48,8 +70,14 @@ const ComicPanelTracker = (props) => {
 
     if (childPanelNodes.length) {
       console.log("moving to next panel", childPanelNodes[0]);
+      setSlideDirection(RIGHT);
+      // exit current panel
+      setSlideIn(false);
+
       setCurrentColumnPanels(childPanelNodes);
       setCurrentPanel(childPanelNodes[0].panelData);
+
+      setTransitionTimeout(LEFT);
     }
   };
 
@@ -63,7 +91,12 @@ const ComicPanelTracker = (props) => {
         "moving up to alternative panel",
         currentColumnPanels[panelIndex - 1].panelData
       );
+      setSlideDirection(UP);
+      // exit current panel
+      setSlideIn(false);
       setCurrentPanel(currentColumnPanels[panelIndex - 1].panelData);
+
+      setTransitionTimeout(DOWN);
     }
   };
 
@@ -77,7 +110,13 @@ const ComicPanelTracker = (props) => {
         "moving down to alternative panel",
         currentColumnPanels[panelIndex + 1].panelData
       );
+      setSlideDirection(DOWN);
+      // exit current panel
+      setSlideIn(false);
+
       setCurrentPanel(currentColumnPanels[panelIndex + 1].panelData);
+
+      setTransitionTimeout(UP);
     }
   };
 
@@ -98,7 +137,11 @@ const ComicPanelTracker = (props) => {
   return (
     <div className={classes.root} {...handlers}>
       <HeaderBar />
-      <ComicPanel panelData={currentPanel} dataUri={"/images/comic.jpg"} />
+      <Slide direction={slideDirection} in={slideIn}>
+        <div>
+          <ComicPanel panelData={currentPanel} dataUri={"/images/comic.jpg"} />
+        </div>
+      </Slide>
     </div>
   );
 };
