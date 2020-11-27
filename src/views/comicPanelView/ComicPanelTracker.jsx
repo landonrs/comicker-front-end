@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import HeaderBar from "../../common/HeaderBar";
 import ComicPanel from "./components/ComicPanel";
-import {
-  getStartingPanel,
-  getNextPanel,
-  getPreviousPanel,
-} from "../../utils/comic-navigation-helper";
+import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
+import ComicTree from "../../utils/comic-tree";
 
 const useStyles = makeStyles({
   root: {
@@ -23,25 +20,36 @@ const ComicPanelTracker = (props) => {
 
   const comicData = location.state.comicData;
 
+  const [comicTree, setComicTree] = useState(null);
+
+  // The current panel the user is viewing
   const [currentPanel, setCurrentPanel] = useState(
     getStartingPanel(location.state.comicData)
   );
+  // used to track ordering of all siblings of a parent
+  const [currentColumnPanels, setCurrentColumnPanels] = useState([]);
+
   const [panelImageUris, setPanelImageUris] = useState({});
 
   const showPreviousPanel = (eventData) => {
-    const previousPanel = getPreviousPanel(comicData, currentPanel);
+    const previousPanelNode = comicTree.getParentPanel(currentPanel.panelId);
 
-    if (previousPanel) {
-      console.log("moving to previous panel", previousPanel);
-      setCurrentPanel(previousPanel);
+    if (previousPanelNode) {
+      console.log("moving to previous panel", previousPanelNode);
+      setCurrentPanel(previousPanelNode.panelData);
+      setCurrentColumnPanels(
+        comicTree.getChildPanels(previousPanelNode.parentId)
+      );
     }
   };
 
   const showNextPanel = (eventData) => {
-    const nextPanel = getNextPanel(currentPanel);
-    if (nextPanel) {
-      console.log("moving to next panel", nextPanel);
-      setCurrentPanel(nextPanel);
+    const childPanelNodes = comicTree.getChildPanels(currentPanel.panelId);
+
+    if (childPanelNodes.length) {
+      console.log("moving to next panel", childPanelNodes[0]);
+      setCurrentColumnPanels(childPanelNodes);
+      setCurrentPanel(childPanelNodes[0].panelData);
     }
   };
 
@@ -60,6 +68,7 @@ const ComicPanelTracker = (props) => {
     // TODO load image data for current panel and all children
     console.log(comicId);
     console.log(comicData);
+    setComicTree(new ComicTree(comicData));
   }, []);
 
   return (

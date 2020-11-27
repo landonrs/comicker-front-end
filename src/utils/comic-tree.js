@@ -1,10 +1,16 @@
 const ROOT_NODE_ID = "rootNode";
 
+const comicSortType = {
+  VOTE_COUNT_LOW_TO_HIGH: "voteCountLowToHigh",
+  VOTE_COUNT_HIGH_TO_LOW: "voteCountHighToLow",
+};
+
 class ComicTree {
-  constructor(comicData) {
+  constructor(comicData, sortBy = comicSortType.VOTE_COUNT_LOW_TO_HIGH) {
     this.comicId = comicData.comicId;
     this.comicData = comicData;
-    this.nodes = buildComicTree(comicData);
+    this.comicSortType = sortBy;
+    this.nodes = buildComicTree(comicData, sortBy);
   }
 
   /**
@@ -22,6 +28,29 @@ class ComicTree {
       }
     });
     return this.getPanelById(parentId);
+  }
+
+  /**
+   * Get all child nodes for the specified panel.
+   * @param {String} panelId
+   */
+  getChildPanels(panelId) {
+    let children = this.nodes.filter((node) => node.parentId === panelId);
+    return this.sortNodes(children);
+  }
+
+  sortNodes(nodes) {
+    if (this.comicSortType === comicSortType.VOTE_COUNT_LOW_TO_HIGH) {
+      nodes.sort(function (a, b) {
+        return a.panelData.voteCount - b.panelData.voteCount;
+      });
+    } else {
+      nodes.sort(function (a, b) {
+        return b.panelData.voteCount - a.panelData.voteCount;
+      });
+    }
+
+    return nodes;
   }
 
   /**
