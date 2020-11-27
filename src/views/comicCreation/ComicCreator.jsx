@@ -54,7 +54,11 @@ const ComicCreator = () => {
   return (
     <div>
       <PanelCreator />
-      <Button color="primary" onClick={() => saveAndConfirm()}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => saveAndConfirm()}
+      >
         Upload
       </Button>
 

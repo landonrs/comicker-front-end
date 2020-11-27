@@ -49,18 +49,18 @@ const ComicPanelTracker = (props) => {
       // exit current panel
       setSlideIn(false);
 
-      setCurrentPanel(previousPanelNode.panelData);
       setCurrentColumnPanels(
         comicTree.getChildPanels(previousPanelNode.parentId)
       );
 
-      setTransitionTimeout(RIGHT);
+      setTransitionTimeout(RIGHT, previousPanelNode.panelData);
     }
   };
 
-  const setTransitionTimeout = (direction) => {
+  const setTransitionTimeout = (direction, newPanel) => {
     setTimeout(() => {
       setSlideDirection(direction);
+      setCurrentPanel(newPanel);
       setSlideIn(true);
     }, 250);
   };
@@ -75,9 +75,8 @@ const ComicPanelTracker = (props) => {
       setSlideIn(false);
 
       setCurrentColumnPanels(childPanelNodes);
-      setCurrentPanel(childPanelNodes[0].panelData);
 
-      setTransitionTimeout(LEFT);
+      setTransitionTimeout(LEFT, childPanelNodes[0].panelData);
     }
   };
 
@@ -94,9 +93,8 @@ const ComicPanelTracker = (props) => {
       setSlideDirection(UP);
       // exit current panel
       setSlideIn(false);
-      setCurrentPanel(currentColumnPanels[panelIndex - 1].panelData);
 
-      setTransitionTimeout(DOWN);
+      setTransitionTimeout(DOWN, currentColumnPanels[panelIndex - 1].panelData);
     }
   };
 
@@ -114,9 +112,7 @@ const ComicPanelTracker = (props) => {
       // exit current panel
       setSlideIn(false);
 
-      setCurrentPanel(currentColumnPanels[panelIndex + 1].panelData);
-
-      setTransitionTimeout(UP);
+      setTransitionTimeout(UP, currentColumnPanels[panelIndex + 1].panelData);
     }
   };
 
