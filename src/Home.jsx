@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -7,6 +7,7 @@ import {
   CardActionArea,
   Container,
   Divider,
+  Grid,
   Paper,
   Typography,
   IconButton,
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
 
 const Home = () => {
   const [value, setValue] = React.useState(0);
-  const { authState, authService } = useOktaAuth();
+  const { authState } = useOktaAuth();
   const [comics, setComics] = useState([]);
   const history = useHistory();
   const classes = useStyles();
@@ -62,35 +63,10 @@ const Home = () => {
     return <div>Loading...</div>;
   }
 
-  const button = authState.isAuthenticated ? (
-    <button
-      onClick={() => {
-        authService.logout();
-      }}
-    >
-      Logout
-    </button>
-  ) : (
-    <button
-      onClick={() => {
-        history.push("/login");
-      }}
-    >
-      Login
-    </button>
-  );
-
   return (
     <>
       <HeaderBar />
       <Paper className={classes.root}>
-        <div>
-          <Link to="/">Home</Link>
-          <br />
-          <Link to="/protected">Protected</Link>
-          <br />
-          {button}
-        </div>
         {comics.map((comicData) => {
           console.log("setting comic panel");
           return (
@@ -112,16 +88,23 @@ const Home = () => {
                   />
                 </CardActionArea>
                 <Divider orientation="vertical" />
-                <IconButton
-                  onClick={() =>
-                    onComicVote(
-                      comicData.comicId,
-                      getStartingPanel(comicData).panelId
-                    )
-                  }
-                >
-                  <ArrowUpwardIcon />
-                </IconButton>
+                <Grid container direction="row" alignItems="center">
+                  <Grid className={classes.arrow} item>
+                    <IconButton
+                      onClick={() =>
+                        onComicVote(
+                          comicData.comicId,
+                          getStartingPanel(comicData).panelId
+                        )
+                      }
+                    >
+                      <ArrowUpwardIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid className={classes.voteBox} item>
+                    <Typography variant="h6">5</Typography>
+                  </Grid>
+                </Grid>
               </Card>
             </Container>
           );
