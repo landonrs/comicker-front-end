@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import HeaderBar from "../../common/HeaderBar";
 import ComicPanel from "./components/ComicPanel";
 import { getStartingPanel } from "../../utils/comic-navigation-helper";
@@ -22,6 +22,7 @@ const useStyles = makeStyles({
 const ComicPanelTracker = (props) => {
   const { comicId } = useParams();
   const location = useLocation();
+  const history = useHistory();
   const classes = useStyles();
 
   const comicData = location.state.comicData;
@@ -130,12 +131,20 @@ const ComicPanelTracker = (props) => {
     setComicTree(new ComicTree(comicData));
   }, []);
 
+  const onCreateNewPanel = (panelId) => {
+    history.push(`/create/${comicId}/${panelId}`);
+  };
+
   return (
     <div className={classes.root} {...handlers}>
       <HeaderBar />
       <Slide direction={slideDirection} in={slideIn}>
         <div>
-          <ComicPanel panelData={currentPanel} dataUri={"/images/comic.jpg"} />
+          <ComicPanel
+            panelData={currentPanel}
+            dataUri={"/images/comic.jpg"}
+            onCreatePanel={onCreateNewPanel}
+          />
         </div>
       </Slide>
     </div>

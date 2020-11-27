@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { createComic } from "../../utils/comicker-client";
 import {
   Button,
@@ -14,6 +14,7 @@ import PanelCreator from "../../common/PanelCreator";
 
 const ComicCreator = () => {
   const history = useHistory();
+  const { comicId, panelId } = useParams();
 
   const [comicTitle, setComicTitle] = useState(null);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
@@ -23,7 +24,7 @@ const ComicCreator = () => {
   const [uploadingComic, setUploadingComic] = useState(false);
 
   const onCreate = (title) => {
-    createComic({ title })
+    createComic({ title, comicId: comicId, parentPanelId: panelId })
       .then((data) => {
         setUploadingComic(false);
         setSuccess(true);
@@ -66,13 +67,17 @@ const ComicCreator = () => {
         onClose={() => setDisplayConfirmDialog(false)}
         open={displayConfirmDialog}
       >
-        <DialogTitle>Select a title for this comic:</DialogTitle>
-        <DialogContent>
-          <TextField
-            variant="outlined"
-            onChange={(e) => setComicTitle(e.target.value)}
-          />
-        </DialogContent>
+        <DialogTitle>
+          {comicId ? "Create new panel?" : "Select a title for this comic:"}
+        </DialogTitle>
+        {!comicId && (
+          <DialogContent>
+            <TextField
+              variant="outlined"
+              onChange={(e) => setComicTitle(e.target.value)}
+            />
+          </DialogContent>
+        )}
         <DialogActions>
           <Button
             variant="contained"
@@ -98,7 +103,7 @@ const ComicCreator = () => {
           <>
             <DialogTitle>
               {success
-                ? `'${comicTitle}' has been successfully created`
+                ? `Comic panel has been successfully created`
                 : "An Error Occurred, please try again"}
               :
             </DialogTitle>

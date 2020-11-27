@@ -25,7 +25,12 @@ const AppWithRouterAccess = () => {
       <Route path="/" exact={true} component={Home} />
       <Route path="/view/:comicId" exact={true} component={ComicPanelTracker} />
       <SecureRoute path="/protected" component={Protected} />
-      <SecureRoute path="/create" component={ComicCreator} />
+      <SecureRoute path="/create" exact={true} component={ComicCreator} />
+      <SecureRoute
+        path="/create/:comicId/:panelId"
+        exact={true}
+        component={ComicCreator}
+      />
       <Route
         path="/login"
         render={() => (

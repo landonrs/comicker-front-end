@@ -17,15 +17,11 @@ const useStyles = makeStyles({
 });
 
 const ComicPanel = (props) => {
-  const { panelData, dataUri } = props;
+  const { panelData, dataUri, onCreatePanel } = props;
   const classes = useStyles();
 
   const onPanelVote = (panelId) => {
     // TODO call vote endpoint
-  };
-
-  const onCreateChildPanel = (panelId) => {
-    console.log("navigate to panel creator...");
   };
 
   return (
@@ -47,7 +43,7 @@ const ComicPanel = (props) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={(e) => onCreateChildPanel(panelData.panelId)}
+                onClick={(e) => onCreatePanel(panelData.panelId)}
               >
                 Add Next Panel
               </Button>
