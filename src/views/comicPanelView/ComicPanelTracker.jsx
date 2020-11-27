@@ -53,15 +53,39 @@ const ComicPanelTracker = (props) => {
     }
   };
 
-  const showAlternativeAbovePanel = (eventData) => {};
+  const showAlternativeAbovePanel = (eventData) => {
+    const panelIndex = currentColumnPanels.findIndex(
+      (panel) => panel.panelId === currentPanel.panelId
+    );
 
-  const showAlternativeBelowPanel = (eventData) => {};
+    if (panelIndex > 0) {
+      console.log(
+        "moving up to alternative panel",
+        currentColumnPanels[panelIndex - 1].panelData
+      );
+      setCurrentPanel(currentColumnPanels[panelIndex - 1].panelData);
+    }
+  };
+
+  const showAlternativeBelowPanel = (eventData) => {
+    const panelIndex = currentColumnPanels.findIndex(
+      (panel) => panel.panelId === currentPanel.panelId
+    );
+
+    if (panelIndex < currentColumnPanels.length - 1) {
+      console.log(
+        "moving down to alternative panel",
+        currentColumnPanels[panelIndex + 1].panelData
+      );
+      setCurrentPanel(currentColumnPanels[panelIndex + 1].panelData);
+    }
+  };
 
   const handlers = useSwipeable({
     onSwipedLeft: showNextPanel,
     onSwipedRight: showPreviousPanel,
-    onSwipedUp: showAlternativeAbovePanel,
-    onSwipedDown: showAlternativeBelowPanel,
+    onSwipedUp: showAlternativeBelowPanel,
+    onSwipedDown: showAlternativeAbovePanel,
   });
 
   useEffect(() => {
