@@ -4,12 +4,10 @@ import { useOktaAuth } from "@okta/okta-react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
+  CardActionArea,
   Container,
   Divider,
   Paper,
-  Avatar,
-  AppBar,
-  Toolbar,
   Typography,
   IconButton,
 } from "@material-ui/core";
@@ -19,6 +17,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import { getAllComics, voteOnComicPanel } from "./utils/comicker-client";
 import { getStartingPanel } from "./utils/comic-navigation-helper";
+import HeaderBar from "./common/HeaderBar";
 
 const useStyles = makeStyles({
   root: {
@@ -83,29 +82,7 @@ const Home = () => {
 
   return (
     <>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Link to="/">
-            <img
-              className={classes.logo}
-              alt="Logo"
-              src="/images/logo192.png"
-            />
-          </Link>
-
-          <Typography variant="h6" color="inherit" align="center">
-            Comicker
-          </Typography>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Avatar>L</Avatar>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <HeaderBar />
       <Paper className={classes.root}>
         <div>
           <Link to="/">Home</Link>
@@ -119,12 +96,21 @@ const Home = () => {
           return (
             <Container maxWidth="xs" key={comicData.comic.title}>
               <Card>
-                <Typography>{comicData.comic.title}</Typography>
-                <img
-                  className={classes.comicRow}
-                  alt="comic"
-                  src="/images/comic.jpg"
-                />
+                <CardActionArea
+                  onClick={(event) =>
+                    history.push({
+                      pathname: `/view/${comicData.comicId}`,
+                      state: { comicData },
+                    })
+                  }
+                >
+                  <Typography>{comicData.comic.title}</Typography>
+                  <img
+                    className={classes.comicRow}
+                    alt="comic"
+                    src="/images/comic.jpg"
+                  />
+                </CardActionArea>
                 <Divider orientation="vertical" />
                 <IconButton
                   onClick={() =>
