@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import CanvasDraw from "react-canvas-draw";
 import { Box, IconButton, Slider, Toolbar } from "@material-ui/core";
@@ -44,6 +44,7 @@ const PanelCreator = (props) => {
   const classes = useStyles();
 
   const [canvasRef, setCanvasRef] = useState(null);
+  let ctx = null;
 
   const onColorChange = (event) => {
     setPenSelectedColor(event.hex);
@@ -61,6 +62,21 @@ const PanelCreator = (props) => {
     canvasRef.undo();
   };
 
+  // TODO - figure out the fun text drawing
+
+  // const writeText = (info, style = {}) => {
+  //   const { text, x, y } = info;
+  //   const { fontSize = 20, fontFamily = 'Arial', color = 'black', textAlign = 'left', textBaseline = 'top' } = style;
+
+  //   ctx.beginPath();
+  //   ctx.font = fontSize + 'px ' + fontFamily;
+  //   ctx.textAlign = textAlign;
+  //   ctx.textBaseline = textBaseline;
+  //   ctx.fillStyle = color;
+  //   ctx.fillText(text, x, y);
+  //   ctx.stroke();
+  // }
+
   return (
     <div className={classes.panelRoot}>
       <Toolbar>
@@ -72,7 +88,7 @@ const PanelCreator = (props) => {
           step={1}
           marks
           min={1}
-          max={50}
+          max={30}
           onChange={(event, value) => setSelectedBrushRadius(value)}
         />
         <ToolButton icon={<CreateIcon />} onClick={onPenSelected} />

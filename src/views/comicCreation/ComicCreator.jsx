@@ -10,7 +10,7 @@ import {
   DialogContent,
   TextField,
 } from "@material-ui/core";
-import PanelCreator from "../../common/PanelCreator";
+import PanelCreator from "./components/PanelCreator";
 
 const ComicCreator = () => {
   const history = useHistory();
