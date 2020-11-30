@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import PanelCreator from "./components/PanelCreator";
+import html2canvas from "html2canvas";
 
 const ComicCreator = () => {
   const history = useHistory();
@@ -42,7 +43,10 @@ const ComicCreator = () => {
 
   const saveAndConfirm = () => {
     // TODO - encode image data
-    setDisplayConfirmDialog(true);
+    // html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
+    //   document.body.appendChild(canvas);
+    // });
+    // setDisplayConfirmDialog(true);
   };
 
   const closeAndNavigateHome = () => {

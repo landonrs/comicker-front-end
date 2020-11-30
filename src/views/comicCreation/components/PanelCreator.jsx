@@ -8,6 +8,7 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import UndoIcon from "@material-ui/icons/Undo";
 import { BiEraser } from "react-icons/bi";
+import ComicStage from "./SpeechBubbleHelper";
 
 const WHITE = "#FFFFFF";
 
@@ -36,9 +37,30 @@ const ToolButton = (props) => {
   );
 };
 
+const initialRectangles = [
+  {
+    x: 10,
+    y: 10,
+    width: 100,
+    height: 100,
+    fill: "red",
+    id: "rect1",
+  },
+  {
+    x: 150,
+    y: 150,
+    width: 100,
+    height: 100,
+    fill: "green",
+    id: "rect2",
+  },
+];
+
 const PanelCreator = (props) => {
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
+  const [draggingItem, setDraggingItem] = useState(false);
+  const [draggableItems, setDraggableItems] = useState(initialRectangles);
 
   const [selectedBrushRadius, setSelectedBrushRadius] = useState(5);
   const classes = useStyles();
@@ -56,6 +78,26 @@ const PanelCreator = (props) => {
 
   const onEraserSelected = (event) => {
     setEraserSelected(true);
+  };
+
+  const onSpeechBubbleSelected = (event) => {
+    const opposite = !draggingItem;
+    console.log(opposite);
+    if (opposite) {
+      const rect = {
+        x: 50,
+        y: 50,
+        width: 100,
+        height: 100,
+        fill: "blue",
+        id: `rect${draggableItems.length + 1}`,
+      };
+      console.log("adding rect");
+      setDraggableItems((draggableItems) => [...draggableItems, rect]);
+
+      console.log("drag items", draggableItems);
+    }
+    setDraggingItem(opposite);
   };
 
   const onUndo = (event) => {
@@ -94,21 +136,27 @@ const PanelCreator = (props) => {
         <ToolButton icon={<CreateIcon />} onClick={onPenSelected} />
         <ToolButton icon={<BiEraser />} onClick={onEraserSelected} />
         <ToolButton icon={<TextFieldsIcon />} onClick={() => {}} />
-        <ToolButton icon={<ChatBubbleOutlineIcon />} onClick={() => {}} />
+        <ToolButton
+          icon={<ChatBubbleOutlineIcon />}
+          onClick={onSpeechBubbleSelected}
+        />
         <ToolButton icon={<UndoIcon />} onClick={onUndo} />
       </Toolbar>
       {/* <SketchPicker color={selectedColor} onChangeComplete={onColorChange} /> */}
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
-        <CanvasDraw
-          ref={(canvasDraw) => setCanvasRef(canvasDraw)}
-          hideGrid={true}
-          brushColor={eraserSelected ? WHITE : penSelectedColor}
-          brushRadius={selectedBrushRadius}
-          canvasWidth={300}
-          canvasHeight={300}
-          lazyRadius={0}
-          hideInterface={true}
-        />
+        <div id={"comicPanelImage"}>
+          <ComicStage isDragging={draggingItem} items={draggableItems} />
+          <CanvasDraw
+            ref={(canvasDraw) => setCanvasRef(canvasDraw)}
+            hideGrid={true}
+            brushColor={eraserSelected ? WHITE : penSelectedColor}
+            brushRadius={selectedBrushRadius}
+            canvasWidth={300}
+            canvasHeight={300}
+            lazyRadius={0}
+            hideInterface={true}
+          />
+        </div>
       </Box>
     </div>
   );
