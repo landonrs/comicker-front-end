@@ -37,30 +37,11 @@ const ToolButton = (props) => {
   );
 };
 
-const initialRectangles = [
-  {
-    x: 10,
-    y: 10,
-    width: 100,
-    height: 100,
-    fill: "red",
-    id: "rect1",
-  },
-  {
-    x: 150,
-    y: 150,
-    width: 100,
-    height: 100,
-    fill: "green",
-    id: "rect2",
-  },
-];
-
 const PanelCreator = (props) => {
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
   const [draggingItem, setDraggingItem] = useState(false);
-  const [draggableItems, setDraggableItems] = useState(initialRectangles);
+  const [draggableItems, setDraggableItems] = useState([]);
   const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
     null
   );
@@ -87,16 +68,16 @@ const PanelCreator = (props) => {
     const opposite = !draggingItem;
     console.log(opposite);
     if (opposite) {
-      const rect = {
+      const speechBubble = {
         x: 50,
         y: 50,
         width: 100,
         height: 100,
-        fill: "blue",
-        id: `rect${draggableItems.length + 1}`,
+        src: "/images/speechBubble.png",
+        id: `bubble${draggableItems.length + 1}`,
       };
-      console.log("adding rect");
-      setDraggableItems((draggableItems) => [...draggableItems, rect]);
+      console.log("adding bubble");
+      setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
 
       console.log("drag items", draggableItems);
     }

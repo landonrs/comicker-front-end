@@ -1,8 +1,9 @@
 import React from "react";
-import { render } from "react-dom";
-import { Stage, Layer, Rect, Transformer } from "react-konva";
+import { Stage, Layer, Image, Rect, Transformer } from "react-konva";
+import useImage from "use-image";
 
-const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
+const SpeechBubbleImage = ({ shapeProps, isSelected, onSelect, onChange }) => {
+  const [img] = useImage(shapeProps.src);
   const shapeRef = React.useRef();
   const trRef = React.useRef();
 
@@ -15,8 +16,9 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
   }, [isSelected]);
 
   return (
-    <React.Fragment>
-      <Rect
+    <>
+      <Image
+        image={img}
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
@@ -64,7 +66,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
           }}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 
@@ -89,14 +91,14 @@ const ComicStage = (props) => {
       style={{ position: "absolute", zIndex: stageSelected ? 999 : 0 }}
     >
       <Layer>
-        {items.map((rect, i) => {
+        {items.map((item, i) => {
           return (
-            <Rectangle
+            <SpeechBubbleImage
               key={i}
-              shapeProps={rect}
-              isSelected={rect.id === selectedId}
+              shapeProps={item}
+              isSelected={item.id === selectedId}
               onSelect={() => {
-                selectShape(rect.id);
+                selectShape(item.id);
               }}
               onChange={(newAttrs) => onChange(newAttrs, i)}
             />

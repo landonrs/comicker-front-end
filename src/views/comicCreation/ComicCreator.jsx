@@ -43,9 +43,9 @@ const ComicCreator = () => {
 
   const saveAndConfirm = () => {
     // TODO - encode image data
-    // html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
-    //   document.body.appendChild(canvas);
-    // });
+    html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
+      document.body.appendChild(canvas);
+    });
     // setDisplayConfirmDialog(true);
   };
 
