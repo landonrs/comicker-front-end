@@ -40,7 +40,6 @@ const ToolButton = (props) => {
 const PanelCreator = (props) => {
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
-  const [draggingItem, setDraggingItem] = useState(false);
   const [draggableItems, setDraggableItems] = useState([]);
   const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
     null
@@ -65,23 +64,40 @@ const PanelCreator = (props) => {
   };
 
   const onSpeechBubbleSelected = (event) => {
-    const opposite = !draggingItem;
-    console.log(opposite);
-    if (opposite) {
-      const speechBubble = {
-        x: 50,
-        y: 50,
-        width: 100,
-        height: 100,
-        src: "/images/speechBubble.png",
-        id: `bubble${draggableItems.length + 1}`,
-      };
-      console.log("adding bubble");
-      setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
+    const speechBubble = {
+      type: "bubble",
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      src: "/images/speechBubble.png",
+      id: `bubble${draggableItems.length + 1}`,
+    };
+    console.log("adding bubble");
+    setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
 
-      console.log("drag items", draggableItems);
-    }
-    setDraggingItem(opposite);
+    console.log("drag items", draggableItems);
+  };
+
+  const onTextIconSelected = (event) => {
+    const textItem = {
+      type: "text",
+      x: 50,
+      y: 50,
+      // width: 100,
+      // height: 25,
+      fontSize: 12,
+      text: "Your Text Here...",
+      align: "left",
+      fill: "black",
+      fontFamily: "Comic Sans MS",
+      id: `text${draggableItems.length + 1}`,
+    };
+
+    console.log("adding text");
+    setDraggableItems((draggableItems) => [...draggableItems, textItem]);
+
+    console.log("drag items", draggableItems);
   };
 
   const onSpeechItemChanged = (newAttrs, index) => {
@@ -99,7 +115,10 @@ const PanelCreator = (props) => {
       <Toolbar>
         {comicSpeechStageSelected ? (
           <>
-            <ToolButton icon={<TextFieldsIcon />} onClick={() => {}} />
+            <ToolButton
+              icon={<TextFieldsIcon />}
+              onClick={onTextIconSelected}
+            />
             <ToolButton
               icon={<ChatBubbleOutlineIcon />}
               onClick={onSpeechBubbleSelected}
