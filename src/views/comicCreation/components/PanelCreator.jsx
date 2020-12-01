@@ -61,8 +61,11 @@ const PanelCreator = (props) => {
   const [eraserSelected, setEraserSelected] = useState(false);
   const [draggingItem, setDraggingItem] = useState(false);
   const [draggableItems, setDraggableItems] = useState(initialRectangles);
+  const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
+    null
+  );
 
-  const [selectedBrushRadius, setSelectedBrushRadius] = useState(5);
+  const [selectedBrushRadius, setSelectedBrushRadius] = useState(1);
   const classes = useStyles();
 
   const [canvasRef, setCanvasRef] = useState(null);
@@ -100,52 +103,54 @@ const PanelCreator = (props) => {
     setDraggingItem(opposite);
   };
 
+  const onSpeechItemChanged = (newAttrs, index) => {
+    const speechItems = draggableItems.slice();
+    speechItems[index] = newAttrs;
+    setDraggableItems(speechItems);
+  };
+
   const onUndo = (event) => {
     canvasRef.undo();
   };
 
-  // TODO - figure out the fun text drawing
-
-  // const writeText = (info, style = {}) => {
-  //   const { text, x, y } = info;
-  //   const { fontSize = 20, fontFamily = 'Arial', color = 'black', textAlign = 'left', textBaseline = 'top' } = style;
-
-  //   ctx.beginPath();
-  //   ctx.font = fontSize + 'px ' + fontFamily;
-  //   ctx.textAlign = textAlign;
-  //   ctx.textBaseline = textBaseline;
-  //   ctx.fillStyle = color;
-  //   ctx.fillText(text, x, y);
-  //   ctx.stroke();
-  // }
-
   return (
     <div className={classes.panelRoot}>
       <Toolbar>
-        <Slider
-          className={classes.slider}
-          defaultValue={selectedBrushRadius}
-          aria-labelledby="brush-radius-slider"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={30}
-          onChange={(event, value) => setSelectedBrushRadius(value)}
-        />
-        <ToolButton icon={<CreateIcon />} onClick={onPenSelected} />
-        <ToolButton icon={<BiEraser />} onClick={onEraserSelected} />
-        <ToolButton icon={<TextFieldsIcon />} onClick={() => {}} />
-        <ToolButton
-          icon={<ChatBubbleOutlineIcon />}
-          onClick={onSpeechBubbleSelected}
-        />
-        <ToolButton icon={<UndoIcon />} onClick={onUndo} />
+        {comicSpeechStageSelected ? (
+          <>
+            <ToolButton icon={<TextFieldsIcon />} onClick={() => {}} />
+            <ToolButton
+              icon={<ChatBubbleOutlineIcon />}
+              onClick={onSpeechBubbleSelected}
+            />
+          </>
+        ) : (
+          <>
+            <Slider
+              className={classes.slider}
+              defaultValue={selectedBrushRadius}
+              aria-labelledby="brush-radius-slider"
+              valueLabelDisplay="auto"
+              step={1}
+              marks
+              min={1}
+              max={30}
+              onChange={(event, value) => setSelectedBrushRadius(value)}
+            />
+            <ToolButton icon={<CreateIcon />} onClick={onPenSelected} />
+            <ToolButton icon={<BiEraser />} onClick={onEraserSelected} />
+            <ToolButton icon={<UndoIcon />} onClick={onUndo} />
+          </>
+        )}
       </Toolbar>
       {/* <SketchPicker color={selectedColor} onChangeComplete={onColorChange} /> */}
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
         <div id={"comicPanelImage"}>
-          <ComicStage isDragging={draggingItem} items={draggableItems} />
+          <ComicStage
+            stageSelected={comicSpeechStageSelected}
+            items={draggableItems}
+            onChange={onSpeechItemChanged}
+          />
           <CanvasDraw
             ref={(canvasDraw) => setCanvasRef(canvasDraw)}
             hideGrid={true}
@@ -158,6 +163,16 @@ const PanelCreator = (props) => {
           />
         </div>
       </Box>
+      <Toolbar>
+        <ToolButton
+          icon={<CreateIcon />}
+          onClick={() => setComicSpeechStageSelected(false)}
+        />
+        <ToolButton
+          icon={<ChatBubbleOutlineIcon />}
+          onClick={() => setComicSpeechStageSelected(true)}
+        />
+      </Toolbar>
     </div>
   );
 };

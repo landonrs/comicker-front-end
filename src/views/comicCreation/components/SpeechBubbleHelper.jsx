@@ -69,8 +69,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
 };
 
 const ComicStage = (props) => {
-  const { isDragging, items } = props;
-  const [rectangles, setRectangles] = React.useState(items);
+  const { stageSelected, items, onChange } = props;
   const [selectedId, selectShape] = React.useState(null);
 
   const checkDeselect = (e) => {
@@ -87,7 +86,7 @@ const ComicStage = (props) => {
       height={300}
       onMouseDown={checkDeselect}
       onTouchStart={checkDeselect}
-      style={{ position: "absolute", zIndex: isDragging ? 999 : 0 }}
+      style={{ position: "absolute", zIndex: stageSelected ? 999 : 0 }}
     >
       <Layer>
         {items.map((rect, i) => {
@@ -99,11 +98,7 @@ const ComicStage = (props) => {
               onSelect={() => {
                 selectShape(rect.id);
               }}
-              onChange={(newAttrs) => {
-                const rects = rectangles.slice();
-                rects[i] = newAttrs;
-                setRectangles(rects);
-              }}
+              onChange={(newAttrs) => onChange(newAttrs, i)}
             />
           );
         })}
