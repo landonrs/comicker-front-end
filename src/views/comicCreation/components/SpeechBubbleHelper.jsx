@@ -2,6 +2,8 @@ import React from "react";
 import { Stage, Layer, Image, Text, Transformer } from "react-konva";
 import useImage from "use-image";
 
+const MIN_WIDTH = 20;
+
 const SpeechBubbleImage = ({ shapeProps, isSelected, onSelect, onChange }) => {
   const [img] = useImage(shapeProps.src);
   const shapeRef = React.useRef();
@@ -97,35 +99,65 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
             y: e.target.y(),
           });
         }}
+        onTransform={() => {
+          const node = shapeRef.current;
+          const scaleX = node.scaleX();
+          const scaleY = node.scaleY();
+
+          if (scaleY >= 0.9 && scaleY <= 1.01) {
+            console.log("only x scale changed");
+            // by removing this, we allow the component to determine what the height should be
+            // so it resizes correctly
+            delete shapeProps.height;
+            onChange({
+              ...shapeProps,
+              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+            });
+          }
+        }}
         onTransformEnd={(e) => {
           // transformer is changing scale of the node
           // and NOT its width or height
           // but in the store we have only width and height
           // to match the data better we will reset scale on transform end
+          console.log("event", e);
+
           const node = shapeRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
 
-          console.log("current font size:", node.fontSize());
-          console.log("scaleX", scaleX);
-          console.log("scaleY", scaleY);
-          console.log(
-            "scaled font size",
-            Math.max(5, node.fontSize() * scaleX)
-          );
-
           // we will reset it back
           node.scaleX(1);
           node.scaleY(1);
-          onChange({
-            ...shapeProps,
-            x: node.x(),
-            y: node.y(),
-            // set minimal value
-            width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY),
-            fontSize: Math.max(5, node.fontSize() * scaleX),
-          });
+
+          if (scaleY >= 0.9 && scaleY <= 1.01) {
+            console.log("only x scale changed");
+            onChange({
+              ...shapeProps,
+              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+            });
+          } else {
+            console.log("current font size:", node.fontSize());
+            console.log("scaleX", scaleX);
+            console.log("scaleY", scaleY);
+            console.log(
+              "scaled font size",
+              Math.max(5, node.fontSize() * scaleX)
+            );
+
+            // delete shapeProps.width;
+            delete shapeProps.height;
+
+            onChange({
+              ...shapeProps,
+              x: node.x(),
+              y: node.y(),
+              // set minimal value
+              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+              // height: Math.max(node.height() * scaleY),
+              fontSize: Math.max(5, node.fontSize() * scaleX),
+            });
+          }
         }}
       />
       {isSelected && (
@@ -137,6 +169,8 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
             "top-right",
             "bottom-left",
             "bottom-right",
+            "middle-left",
+            "middle-right",
           ]}
           boundBoxFunc={(oldBox, newBox) => {
             // limit resize

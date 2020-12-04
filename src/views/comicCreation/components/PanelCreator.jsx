@@ -10,6 +10,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import UndoIcon from "@material-ui/icons/Undo";
 import { BiEraser } from "react-icons/bi";
 import ComicStage from "./SpeechBubbleHelper";
+import TextSelectDialog from "./TextSelectDialog";
 
 const WHITE = "#FFFFFF";
 
@@ -39,8 +40,13 @@ const ToolButton = (props) => {
 };
 
 const PanelCreator = (props) => {
+  // state for the drawable canvas
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
+  const [canvasRef, setCanvasRef] = useState(null);
+  const [selectedBrushRadius, setSelectedBrushRadius] = useState(1);
+
+  // state for the speech items
   const [draggableItems, setDraggableItems] = useState([]);
   const [currentSelectedSpeechItem, setCurrentSelectedSpeechItem] = useState(
     null
@@ -48,11 +54,10 @@ const PanelCreator = (props) => {
   const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
     null
   );
+  const [showTextDialog, setShowTextDialog] = useState(false);
 
-  const [selectedBrushRadius, setSelectedBrushRadius] = useState(1);
   const classes = useStyles();
 
-  const [canvasRef, setCanvasRef] = useState(null);
   let ctx = null;
 
   const onColorChange = (event) => {
@@ -83,13 +88,14 @@ const PanelCreator = (props) => {
     console.log("drag items", draggableItems);
   };
 
-  const onTextIconSelected = (event) => {
+  const onTextItemAdded = (textValue) => {
     const textItem = {
       type: "text",
       x: 50,
       y: 50,
       fontSize: 12,
-      text: "Your Text Here...",
+      width: 100,
+      text: textValue,
       align: "left",
       fill: "black",
       fontFamily: "Comic Sans MS",
@@ -100,6 +106,7 @@ const PanelCreator = (props) => {
     setDraggableItems((draggableItems) => [...draggableItems, textItem]);
 
     console.log("drag items", draggableItems);
+    setShowTextDialog(false);
   };
 
   const onSpeechItemChanged = (newAttrs, index) => {
@@ -134,7 +141,7 @@ const PanelCreator = (props) => {
           <>
             <ToolButton
               icon={<TextFieldsIcon />}
-              onClick={onTextIconSelected}
+              onClick={() => setShowTextDialog(true)}
             />
             <ToolButton
               icon={<ChatBubbleOutlineIcon />}
@@ -203,6 +210,13 @@ const PanelCreator = (props) => {
           onClick={() => setComicSpeechStageSelected(true)}
         />
       </Toolbar>
+
+      {/*speech item dialogs*/}
+      <TextSelectDialog
+        open={showTextDialog}
+        onClose={() => setShowTextDialog(false)}
+        onConfirm={onTextItemAdded}
+      />
     </div>
   );
 };
