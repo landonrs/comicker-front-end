@@ -152,7 +152,7 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
 };
 
 const ComicStage = (props) => {
-  const { stageSelected, items, onChange } = props;
+  const { stageSelected, items, onChange, onItemSelect } = props;
   const [selectedId, selectShape] = React.useState(null);
 
   const checkDeselect = (e) => {
@@ -160,6 +160,7 @@ const ComicStage = (props) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
+      onItemSelect(null);
     }
   };
 
@@ -176,11 +177,12 @@ const ComicStage = (props) => {
           if (item.type === "bubble") {
             return (
               <SpeechBubbleImage
-                key={i}
+                key={item.id}
                 shapeProps={item}
                 isSelected={item.id === selectedId}
                 onSelect={() => {
                   selectShape(item.id);
+                  onItemSelect(i);
                 }}
                 onChange={(newAttrs) => onChange(newAttrs, i)}
               />
@@ -188,11 +190,12 @@ const ComicStage = (props) => {
           } else {
             return (
               <TextItem
-                key={i}
+                key={item.id}
                 shapeProps={item}
                 isSelected={item.id === selectedId}
                 onSelect={() => {
                   selectShape(item.id);
+                  onItemSelect(i);
                 }}
                 onChange={(newAttrs) => onChange(newAttrs, i)}
               />

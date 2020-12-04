@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import CreateIcon from "@material-ui/icons/Create";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import UndoIcon from "@material-ui/icons/Undo";
 import { BiEraser } from "react-icons/bi";
 import ComicStage from "./SpeechBubbleHelper";
@@ -41,6 +42,9 @@ const PanelCreator = (props) => {
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
   const [draggableItems, setDraggableItems] = useState([]);
+  const [currentSelectedSpeechItem, setCurrentSelectedSpeechItem] = useState(
+    null
+  );
   const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
     null
   );
@@ -71,7 +75,7 @@ const PanelCreator = (props) => {
       width: 100,
       height: 100,
       src: "/images/speechBubble.png",
-      id: `bubble${draggableItems.length + 1}`,
+      id: `bubble${Date.now()}`,
     };
     console.log("adding bubble");
     setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
@@ -89,7 +93,7 @@ const PanelCreator = (props) => {
       align: "left",
       fill: "black",
       fontFamily: "Comic Sans MS",
-      id: `text${draggableItems.length + 1}`,
+      id: `text${Date.now()}`,
     };
 
     console.log("adding text");
@@ -102,6 +106,21 @@ const PanelCreator = (props) => {
     const speechItems = draggableItems.slice();
     speechItems[index] = newAttrs;
     setDraggableItems(speechItems);
+  };
+
+  const onSpeechItemSelected = (itemIndex) => {
+    console.log("speech item selected at ", itemIndex);
+    setCurrentSelectedSpeechItem(itemIndex);
+  };
+
+  const onDeleteSelectedItem = () => {
+    console.log("called delete", currentSelectedSpeechItem);
+    if (currentSelectedSpeechItem !== null) {
+      // remove item from array
+      draggableItems.splice(currentSelectedSpeechItem, 1);
+      setDraggableItems([...draggableItems]);
+      setCurrentSelectedSpeechItem(null);
+    }
   };
 
   const onUndo = (event) => {
@@ -120,6 +139,10 @@ const PanelCreator = (props) => {
             <ToolButton
               icon={<ChatBubbleOutlineIcon />}
               onClick={onSpeechBubbleSelected}
+            />
+            <ToolButton
+              icon={<DeleteForeverIcon />}
+              onClick={onDeleteSelectedItem}
             />
           </>
         ) : (
@@ -156,6 +179,7 @@ const PanelCreator = (props) => {
             stageSelected={comicSpeechStageSelected}
             items={draggableItems}
             onChange={onSpeechItemChanged}
+            onItemSelect={onSpeechItemSelected}
           />
           <CanvasDraw
             ref={(canvasDraw) => setCanvasRef(canvasDraw)}
