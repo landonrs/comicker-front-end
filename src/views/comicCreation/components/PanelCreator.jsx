@@ -23,12 +23,12 @@ const useStyles = makeStyles({
 });
 
 const ToolButton = (props) => {
-  const { icon, onClick } = props;
+  const { icon, onClick, isSelected = false } = props;
 
   return (
     <IconButton
       onClick={() => onClick()}
-      color="primary"
+      color={isSelected ? "secondary" : "primary"}
       aria-label="upload picture"
       component="span"
     >
@@ -84,8 +84,6 @@ const PanelCreator = (props) => {
       type: "text",
       x: 50,
       y: 50,
-      // width: 100,
-      // height: 25,
       fontSize: 12,
       text: "Your Text Here...",
       align: "left",
@@ -137,8 +135,16 @@ const PanelCreator = (props) => {
               max={30}
               onChange={(event, value) => setSelectedBrushRadius(value)}
             />
-            <ToolButton icon={<CreateIcon />} onClick={onPenSelected} />
-            <ToolButton icon={<BiEraser />} onClick={onEraserSelected} />
+            <ToolButton
+              icon={<CreateIcon />}
+              onClick={onPenSelected}
+              isSelected={!eraserSelected}
+            />
+            <ToolButton
+              icon={<BiEraser />}
+              onClick={onEraserSelected}
+              isSelected={eraserSelected}
+            />
             <ToolButton icon={<UndoIcon />} onClick={onUndo} />
           </>
         )}
