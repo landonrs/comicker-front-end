@@ -11,6 +11,7 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { BiEraser } from "react-icons/bi";
 import ComicStage from "./SpeechBubbleHelper";
 import TextSelectDialog from "./TextSelectDialog";
+import SpeechBubbleSelectDialog from "./SpeechBubbleSelectDialog";
 
 const WHITE = "#FFFFFF";
 
@@ -55,6 +56,7 @@ const PanelCreator = (props) => {
     null
   );
   const [showTextDialog, setShowTextDialog] = useState(false);
+  const [showBubbleSelectDialog, setShowBubbleSelectDialog] = useState(false);
 
   const classes = useStyles();
 
@@ -72,20 +74,22 @@ const PanelCreator = (props) => {
     setEraserSelected(true);
   };
 
-  const onSpeechBubbleSelected = (event) => {
+  const onSpeechBubbleSelected = (imageSrc) => {
     const speechBubble = {
       type: "bubble",
       x: 50,
       y: 50,
       width: 100,
       height: 100,
-      src: "/images/speechBubble.png",
+      src: imageSrc,
       id: `bubble${Date.now()}`,
     };
     console.log("adding bubble");
     setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
 
     console.log("drag items", draggableItems);
+
+    setShowBubbleSelectDialog(false);
   };
 
   const onTextItemAdded = (textValue) => {
@@ -145,7 +149,7 @@ const PanelCreator = (props) => {
             />
             <ToolButton
               icon={<ChatBubbleOutlineIcon />}
-              onClick={onSpeechBubbleSelected}
+              onClick={() => setShowBubbleSelectDialog(true)}
             />
             <ToolButton
               icon={<DeleteForeverIcon />}
@@ -216,6 +220,11 @@ const PanelCreator = (props) => {
         open={showTextDialog}
         onClose={() => setShowTextDialog(false)}
         onConfirm={onTextItemAdded}
+      />
+      <SpeechBubbleSelectDialog
+        open={showBubbleSelectDialog}
+        onClose={() => setShowBubbleSelectDialog(false)}
+        onConfirm={onSpeechBubbleSelected}
       />
     </div>
   );
