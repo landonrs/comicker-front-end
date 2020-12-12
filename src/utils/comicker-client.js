@@ -21,7 +21,7 @@ const addPanel = (comic, previousPanelId, panelImage) => {
 
 const createComic = (comicData) => {
   return client(`${BASE_PATH}/comics/create`, {
-    body: { comicData },
+    body: { ...comicData },
     method: "POST",
   });
 };

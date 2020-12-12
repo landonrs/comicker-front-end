@@ -3,6 +3,7 @@ import { Stage, Layer, Image, Text, Transformer } from "react-konva";
 import useImage from "use-image";
 
 const MIN_WIDTH = 20;
+const MAX_WIDTH = 300;
 
 const SpeechBubbleImage = ({ shapeProps, isSelected, onSelect, onChange }) => {
   const [img] = useImage(shapeProps.src);
@@ -111,7 +112,7 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
             delete shapeProps.height;
             onChange({
               ...shapeProps,
-              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+              width: Math.min(node.width() * scaleX, MAX_WIDTH),
             });
           }
         }}
@@ -134,7 +135,7 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
             console.log("only x scale changed");
             onChange({
               ...shapeProps,
-              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+              width: Math.min(node.width() * scaleX, MAX_WIDTH),
             });
           } else {
             console.log("current font size:", node.fontSize());
@@ -153,7 +154,7 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
               x: node.x(),
               y: node.y(),
               // set minimal value
-              width: Math.max(node.width() * scaleX, MIN_WIDTH),
+              width: Math.min(node.width() * scaleX, MAX_WIDTH),
               // height: Math.max(node.height() * scaleY),
               fontSize: Math.max(5, node.fontSize() * scaleX),
             });

@@ -53,7 +53,7 @@ const PanelCreator = (props) => {
     null
   );
   const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
-    null
+    false
   );
   const [showTextDialog, setShowTextDialog] = useState(false);
   const [showBubbleSelectDialog, setShowBubbleSelectDialog] = useState(false);
@@ -208,10 +208,12 @@ const PanelCreator = (props) => {
         <ToolButton
           icon={<CreateIcon />}
           onClick={() => setComicSpeechStageSelected(false)}
+          isSelected={!comicSpeechStageSelected}
         />
         <ToolButton
           icon={<ChatBubbleOutlineIcon />}
           onClick={() => setComicSpeechStageSelected(true)}
+          isSelected={comicSpeechStageSelected}
         />
       </Toolbar>
 
