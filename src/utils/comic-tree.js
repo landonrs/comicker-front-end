@@ -42,11 +42,11 @@ class ComicTree {
   sortNodes(nodes) {
     if (this.comicSortType === comicSortType.VOTE_COUNT_LOW_TO_HIGH) {
       nodes.sort(function (a, b) {
-        return a.panelData.voteCount - b.panelData.voteCount;
+        return getVoteCount(a.panelData) - getVoteCount(b.panelData);
       });
     } else {
       nodes.sort(function (a, b) {
-        return b.panelData.voteCount - a.panelData.voteCount;
+        return getVoteCount(b.panelData) - getVoteCount(a.panelData);
       });
     }
 
@@ -79,6 +79,10 @@ const addChildrenNodesToTree = (panel, parentId, nodeList) => {
   });
 
   nodeList.push(new PanelNode(parentId, panel));
+};
+
+const getVoteCount = (panel) => {
+  return panel.voterIds ? panel.voterIds.length : 0;
 };
 
 class PanelNode {

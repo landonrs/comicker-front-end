@@ -37,7 +37,9 @@ const ComicPanel = (props) => {
               </IconButton>
             </Grid>
             <Grid className={classes.voteBox} item>
-              <Typography variant="h6">{panelData.voteCount}</Typography>
+              <Typography variant="h6">
+                {panelData.voterIds ? panelData.voterIds.length : 0}
+              </Typography>
             </Grid>
             <Grid className={classes.spacer} item>
               <Button
