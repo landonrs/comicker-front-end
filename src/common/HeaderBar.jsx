@@ -9,6 +9,7 @@ import {
 import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useOktaAuth } from "@okta/okta-react";
+import { setAccessToken } from "../utils/api-client";
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +31,7 @@ const HeaderBar = () => {
       // When user isn't authenticated, forget any user info
       setUserInfo(null);
     } else {
+      setAccessToken(authState.accessToken);
       authService.getUser().then((info) => {
         console.log(info);
         setUserInfo(info);
