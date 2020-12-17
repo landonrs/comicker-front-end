@@ -6,6 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
 import ComicTree from "../../utils/comic-tree";
 import { Slide } from "@material-ui/core";
+import { voteOnComicPanel } from "../../utils/comicker-client";
+import { useOktaAuth } from "@okta/okta-react";
 
 const DOWN = "down";
 const UP = "up";
@@ -134,14 +136,38 @@ const ComicPanelTracker = (props) => {
     history.push(`/create/${comicId}/${panelId}`);
   };
 
+  const onVote = (panelId) => {
+    voteOnComicPanel(comicId, panelId)
+      .then((result) => {})
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  const { authState, authService } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+  useEffect(() => {
+    if (!authState.isAuthenticated) {
+      // When user isn't authenticated, forget any user info
+      setUserInfo(null);
+    } else {
+      authService.getUser().then((info) => {
+        console.log(info);
+        setUserInfo(info);
+      });
+    }
+  }, [authState, authService]);
+
   return (
     <div className={classes.root} {...handlers}>
       <Slide direction={slideDirection} in={slideIn}>
         <div>
           <ComicPanel
+            userInfo={userInfo}
             panelData={currentPanel}
             dataUri={"/images/comic.jpg"}
             onCreatePanel={onCreateNewPanel}
+            onVote={onVote}
           />
         </div>
       </Slide>

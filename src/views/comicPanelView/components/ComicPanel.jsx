@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -16,13 +16,17 @@ const useStyles = makeStyles({
   spacer: { marginLeft: "45%", width: "30%", height: "25%" },
 });
 
+const userIdInPanelVotes = (panelData, userInfo) => {
+  return panelData.voterIds.includes(userInfo?.sub);
+};
+
 const ComicPanel = (props) => {
-  const { panelData, dataUri, onCreatePanel } = props;
+  const { userInfo, panelData, dataUri, onCreatePanel, onVote } = props;
   const classes = useStyles();
 
-  const onPanelVote = (panelId) => {
-    // TODO call vote endpoint
-  };
+  const [userHasVoted, setUserHasVoted] = useState(
+    userIdInPanelVotes(panelData, userInfo)
+  );
 
   return (
     <div>
@@ -32,7 +36,13 @@ const ComicPanel = (props) => {
           <Typography>{`Author: ${panelData.author}`}</Typography>
           <Grid container direction="row" alignItems="center">
             <Grid className={classes.arrow} item>
-              <IconButton onClick={() => onPanelVote(panelData.panelId)}>
+              <IconButton
+                color={userHasVoted ? "primary" : "default"}
+                disableRipple={userHasVoted}
+                onClick={
+                  !userHasVoted ? () => onVote(panelData.panelId) : () => {}
+                }
+              >
                 <ArrowUpwardIcon />
               </IconButton>
             </Grid>

@@ -57,14 +57,6 @@ const Home = () => {
     setComicsLoading(true);
   }, []);
 
-  const onComicVote = (comicId, panelId) => {
-    voteOnComicPanel(comicId, panelId)
-      .then((result) => {})
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-
   if (authState.isPending) {
     return <div>Loading...</div>;
   }
@@ -105,20 +97,8 @@ const Home = () => {
                   </CardActionArea>
                   <Divider orientation="vertical" />
                   <Grid container direction="row" alignItems="center">
-                    <Grid className={classes.arrow} item>
-                      <IconButton
-                        onClick={() =>
-                          onComicVote(
-                            comicData.comicId,
-                            getStartingPanel(comicData).panelId
-                          )
-                        }
-                      >
-                        <ArrowUpwardIcon />
-                      </IconButton>
-                    </Grid>
                     <Grid className={classes.voteBox} item>
-                      <Typography variant="h6">5</Typography>
+                      <Typography variant="caption">total votes: 5</Typography>
                     </Grid>
                   </Grid>
                 </Card>
