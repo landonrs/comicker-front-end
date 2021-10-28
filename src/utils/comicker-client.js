@@ -26,4 +26,12 @@ const createComic = (comicData) => {
   });
 };
 
-export { getAllComics, createComic, addPanel, voteOnComicPanel };
+const uploadImage = (s3Key, imageData) => {
+  return client(`/panels/upload`, {
+    body: { panelImage: imageData, s3Key },
+    method: "POST",
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+export { getAllComics, createComic, addPanel, voteOnComicPanel, uploadImage };
