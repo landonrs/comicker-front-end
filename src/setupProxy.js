@@ -10,12 +10,12 @@ module.exports = function (app) {
     console.log(`"setting up proxy for: ${key}"`);
     var proxyOptions = proxyList[key];
 
-    proxyOptions.address = proxyOptions.address.replace(/\{(.+)\}/, function (
-      match,
-      envVar
-    ) {
-      return process.env[envVar];
-    });
+    proxyOptions.address = proxyOptions.address.replace(
+      /\{(.+)\}/,
+      function (match, envVar) {
+        return process.env[envVar];
+      }
+    );
 
     app.use(
       key,

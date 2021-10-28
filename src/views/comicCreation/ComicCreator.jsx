@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { createComic, uploadImage } from "../../utils/comicker-client";
+import { createComic} from "../../utils/comicker-client";
 import {
   Button,
   CircularProgress,
@@ -25,19 +25,21 @@ const ComicCreator = () => {
   const [uploadingComic, setUploadingComic] = useState(false);
 
   const onCreate = (title) => {
-    createComic({ title, comicId: comicId, parentPanelId: panelId })
-      .then((data) => {
-        setUploadingComic(false);
-        setSuccess(true);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setUploadingComic(false);
-        setSuccess(false);
-      });
-
     html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
-      uploadImage("testKey.jpg", canvas.toDataURL())
+      canvas.toBlob(function(blob) {
+        // TODO - pass blob into payload
+          createComic({ title, comicId: comicId, parentPanelId: panelId })
+        .then((data) => {
+          setUploadingComic(false);
+          setSuccess(true);
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setUploadingComic(false);
+          setSuccess(false);
+        });
+      });
+      
     });
 
     setDisplayConfirmDialog(false);
