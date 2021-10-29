@@ -40,10 +40,8 @@ const ComicPanelTracker = (props) => {
   const [slideDirection, setSlideDirection] = useState(RIGHT);
   const [slideIn, setSlideIn] = useState(true);
 
-  const [panelImageUris, setPanelImageUris] = useState({});
-
   const showPreviousPanel = (eventData) => {
-    const previousPanelNode = comicTree.getParentPanel(currentPanel.panelId);
+    const previousPanelNode = comicTree.getParentPanel(currentPanel.panelData.panelId);
 
     if (previousPanelNode) {
       console.log("moving to previous panel", previousPanelNode);
@@ -55,7 +53,7 @@ const ComicPanelTracker = (props) => {
         comicTree.getChildPanels(previousPanelNode.parentId)
       );
 
-      setTransitionTimeout(RIGHT, previousPanelNode.panelData);
+      setTransitionTimeout(RIGHT, previousPanelNode);
     }
   };
 
@@ -68,7 +66,7 @@ const ComicPanelTracker = (props) => {
   };
 
   const showNextPanel = (eventData) => {
-    const childPanelNodes = comicTree.getChildPanels(currentPanel.panelId);
+    const childPanelNodes = comicTree.getChildPanels(currentPanel.panelData.panelId);
 
     if (childPanelNodes.length) {
       console.log("moving to next panel", childPanelNodes[0]);
@@ -78,13 +76,13 @@ const ComicPanelTracker = (props) => {
 
       setCurrentColumnPanels(childPanelNodes);
 
-      setTransitionTimeout(LEFT, childPanelNodes[0].panelData);
+      setTransitionTimeout(LEFT, childPanelNodes[0]);
     }
   };
 
   const showAlternativeAbovePanel = (eventData) => {
     const panelIndex = currentColumnPanels.findIndex(
-      (panel) => panel.panelId === currentPanel.panelId
+      (panel) => panel.panelId === currentPanel.panelData.panelId
     );
 
     if (panelIndex > 0) {
@@ -96,13 +94,13 @@ const ComicPanelTracker = (props) => {
       // exit current panel
       setSlideIn(false);
 
-      setTransitionTimeout(DOWN, currentColumnPanels[panelIndex - 1].panelData);
+      setTransitionTimeout(DOWN, currentColumnPanels[panelIndex - 1]);
     }
   };
 
   const showAlternativeBelowPanel = (eventData) => {
     const panelIndex = currentColumnPanels.findIndex(
-      (panel) => panel.panelId === currentPanel.panelId
+      (panel) => panel.panelId === currentPanel.panelData.panelId
     );
 
     if (panelIndex < currentColumnPanels.length - 1) {
@@ -114,7 +112,7 @@ const ComicPanelTracker = (props) => {
       // exit current panel
       setSlideIn(false);
 
-      setTransitionTimeout(UP, currentColumnPanels[panelIndex + 1].panelData);
+      setTransitionTimeout(UP, currentColumnPanels[panelIndex + 1]);
     }
   };
 
@@ -164,8 +162,8 @@ const ComicPanelTracker = (props) => {
         <div>
           <ComicPanel
             userInfo={userInfo}
-            panelData={currentPanel}
-            dataUri={"/images/comic.jpg"}
+            panelNode={currentPanel}
+            dataUri={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
             onCreatePanel={onCreateNewPanel}
             onVote={onVote}
           />

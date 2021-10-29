@@ -1,7 +1,10 @@
 const STARTING_PANEL_INDEX = 0;
 
 const getStartingPanel = (comic) => {
-  return comic.comic.panels[STARTING_PANEL_INDEX];
+  return {
+    panelData: comic.comic.panels[STARTING_PANEL_INDEX],
+    parentId: null,
+  };
 };
 
 export { getStartingPanel };

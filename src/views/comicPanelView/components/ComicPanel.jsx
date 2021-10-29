@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Button,
+  Box,
   Card,
   Grid,
   Paper,
@@ -11,9 +12,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
 const useStyles = makeStyles({
-  panelImage: { width: "100%", marginTop: "10%" },
+  canvasBorder: {
+    display: "inline-block",
+  },
+  panelImage: { width: "100%", marginTop: "0%" },
   arrow: { margin: "0, 0, 5%, 5%", width: "10%" },
-  spacer: { marginLeft: "45%", width: "30%", height: "25%" },
+  spacer: { marginLeft: "15%", width: "30%", height: "30%" },
 });
 
 const userIdInPanelVotes = (panelData, userInfo) => {
@@ -21,8 +25,11 @@ const userIdInPanelVotes = (panelData, userInfo) => {
 };
 
 const ComicPanel = (props) => {
-  const { userInfo, panelData, dataUri, onCreatePanel, onVote } = props;
+  const { userInfo, panelNode, dataUri, onCreatePanel, onVote } = props;
   const classes = useStyles();
+  const [panelImageLoaded, setPanelImageLoaded] = useState(false);
+  const panelData = panelNode.panelData
+  const panelParentId = panelNode.parentId
 
   const [userHasVoted, setUserHasVoted] = useState(
     userIdInPanelVotes(panelData, userInfo)
@@ -32,7 +39,19 @@ const ComicPanel = (props) => {
     <div>
       <Paper>
         <Card>
-          <img className={classes.panelImage} src={dataUri} alt="comic" />
+          <Box
+            className={classes.canvasBorder}
+            disableGutters={true}
+            border={5}
+          >
+            <img
+              className={classes.panelImage}
+              style={panelImageLoaded ? {} : { display: "none" }}
+              src={dataUri}
+              alt="comic"
+              onLoad={() => setPanelImageLoaded(true)}
+            />
+          </Box>
           <Typography>{`Author: ${panelData.author}`}</Typography>
           <Grid container direction="row" alignItems="center">
             <Grid className={classes.arrow} item>
@@ -59,6 +78,17 @@ const ComicPanel = (props) => {
               >
                 Add Next Panel
               </Button>
+            </Grid>
+            <Grid item>
+              {panelParentId && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => onCreatePanel(panelParentId)}
+                >
+                  Add Alternative Panel
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Card>
