@@ -24,12 +24,22 @@ const ComicCreator = () => {
 
   const [uploadingComic, setUploadingComic] = useState(false);
 
-  const onCreate = (title) => {
+  const onCreate = async (title) => {
     html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
-      canvas.toBlob(function(blob) {
-        // TODO - pass blob into payload
+      canvas.toBlob(function(imageBlob) {
           createComic({ title, comicId: comicId, parentPanelId: panelId })
-        .then((data) => {
+        .then( async (data) => {
+          const {imageUrl} = data[0]
+          var file = new File([imageBlob], "panel.jpg");
+
+          const result = await fetch(imageUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "multipart/form-data"
+            },
+            body: file
+          })
+          
           setUploadingComic(false);
           setSuccess(true);
         })
@@ -48,10 +58,6 @@ const ComicCreator = () => {
   };
 
   const saveAndConfirm = () => {
-    // TODO - encode image data
-    html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
-      document.body.appendChild(canvas);
-    });
     setDisplayConfirmDialog(true);
   };
 
