@@ -32,7 +32,7 @@ const ComicCreator = () => {
           const {imageUrl} = data[0]
           var file = new File([imageBlob], "panel.jpg");
 
-          const result = await fetch(imageUrl, {
+          await fetch(imageUrl, {
             method: "PUT",
             headers: {
               "Content-Type": "multipart/form-data"

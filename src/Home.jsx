@@ -17,9 +17,7 @@ import {
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CreateIcon from "@material-ui/icons/Create";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import { getAllComics, voteOnComicPanel } from "./utils/comicker-client";
-import { getStartingPanel } from "./utils/comic-navigation-helper";
+import { getAllComics} from "./utils/comicker-client";
 
 const useStyles = makeStyles({
   root: {
@@ -92,7 +90,7 @@ const Home = () => {
                     <img
                       className={classes.comicRow}
                       alt="comic"
-                      src="/images/comic.jpg"
+                      src={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicData.comicId}/${comicData.comicId}.jpg`}
                     />
                   </CardActionArea>
                   <Divider orientation="vertical" />
