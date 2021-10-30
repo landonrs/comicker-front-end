@@ -34,6 +34,9 @@ const ComicPanelTracker = (props) => {
   const [currentPanel, setCurrentPanel] = useState(
     getStartingPanel(location.state.comicData)
   );
+  // used to track which child panel to go to if user looks at next panel
+  const [lastChildPanelVisited, setLastChildPanelVisited] = useState(null)
+
   // used to track ordering of all siblings of a parent
   const [currentColumnPanels, setCurrentColumnPanels] = useState([]);
 
@@ -45,6 +48,7 @@ const ComicPanelTracker = (props) => {
 
     if (previousPanelNode) {
       console.log("moving to previous panel", previousPanelNode);
+      setLastChildPanelVisited(currentPanel)
       setSlideDirection(LEFT);
       // exit current panel
       setSlideIn(false);
@@ -69,14 +73,18 @@ const ComicPanelTracker = (props) => {
     const childPanelNodes = comicTree.getChildPanels(currentPanel.panelData.panelId);
 
     if (childPanelNodes.length) {
-      console.log("moving to next panel", childPanelNodes[0]);
+      const childPanel = lastChildPanelVisited ? lastChildPanelVisited : childPanelNodes[0]
+      console.log("moving to next panel", childPanel);
       setSlideDirection(RIGHT);
       // exit current panel
       setSlideIn(false);
 
       setCurrentColumnPanels(childPanelNodes);
 
-      setTransitionTimeout(LEFT, childPanelNodes[0]);
+      // this is reset to avoid user being able to scroll to right infinitely
+      setLastChildPanelVisited(null)
+
+      setTransitionTimeout(LEFT, childPanel);
     }
   };
 
@@ -90,6 +98,9 @@ const ComicPanelTracker = (props) => {
         "moving up to alternative panel",
         currentColumnPanels[panelIndex - 1].panelData
       );
+      // this is reset to avoid mismtched rows
+      setLastChildPanelVisited(null)
+
       setSlideDirection(UP);
       // exit current panel
       setSlideIn(false);
@@ -108,6 +119,10 @@ const ComicPanelTracker = (props) => {
         "moving down to alternative panel",
         currentColumnPanels[panelIndex + 1].panelData
       );
+
+      // this is reset to avoid mismtched rows
+      setLastChildPanelVisited(null)
+
       setSlideDirection(DOWN);
       // exit current panel
       setSlideIn(false);
