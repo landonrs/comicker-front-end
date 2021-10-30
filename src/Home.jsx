@@ -38,11 +38,11 @@ const Home = () => {
   const classes = useStyles();
 
 
-  function getComicPage() {
+  function getNextComicPage() {
     getPaginatedComics(comicPageId)
     .then((data) => {
         const [comicList] = data;
-        setComics(comicList.comics);
+        setComics(currentComics => [...currentComics, ...comicList.comics]);
         setComicPageId(comicList.pageId)
         setComicsLoading(false);
       
@@ -56,7 +56,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    getComicPage()
+    getNextComicPage()
     
   }, []);
 
@@ -66,18 +66,7 @@ const Home = () => {
 
   return (
     <>
-      {comicsLoading ? (
-        <Box
-          display="flex"
-          width={"100%"}
-          height={500}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Paper className={classes.root}>
+    <Paper className={classes.root}>
           {comics.map((comicData) => {
             console.log("setting comic panel");
             return (
@@ -108,13 +97,26 @@ const Home = () => {
               </Container>
             );
           })}
+          {comicsLoading ? (
+        <Box
+          display="flex"
+          width={"100%"}
+          height={500}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <CircularProgress />
+        </Box>) : (
+          <>
           {comicPageId && <Button
         variant="contained"
         color="primary"
-        onClick={() => getComicPage()}
+        onClick={() => getNextComicPage()}
       >
         View More Comics
       </Button>}
+      </>
+      )}
           <BottomNavigation
             value={value}
             onChange={(event, newValue) => {
@@ -132,7 +134,6 @@ const Home = () => {
             />
           </BottomNavigation>
         </Paper>
-      )}
     </>
   );
 };
