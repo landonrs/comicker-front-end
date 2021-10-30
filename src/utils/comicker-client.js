@@ -2,8 +2,8 @@ import client from "./api-client";
 
 const BASE_PATH = "/comicker";
 
-const getAllComics = () => {
-  return client(`${BASE_PATH}/comics`);
+const getPaginatedComics = (comicPageId) => {
+  return client(`${BASE_PATH}/comics/${comicPageId}`);
 };
 
 const voteOnComicPanel = (comicId, panelId) => {
@@ -26,4 +26,4 @@ const createComic = (comicData) => {
   });
 };
 
-export { getAllComics, createComic, addPanel, voteOnComicPanel };
+export { getPaginatedComics, createComic, addPanel, voteOnComicPanel };

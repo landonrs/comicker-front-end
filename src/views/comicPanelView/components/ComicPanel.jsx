@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
   panelImage: { width: "100%", marginTop: "0%" },
   arrow: { margin: "0, 0, 5%, 5%", width: "10%" },
-  spacer: { marginLeft: "15%", width: "30%", height: "30%" },
+  spacer: { marginLeft: "10%", width: "30%", height: "20%" },
 });
 
 const userIdInPanelVotes = (panelData, userInfo) => {

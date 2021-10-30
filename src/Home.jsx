@@ -4,6 +4,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CircularProgress,
@@ -17,7 +18,7 @@ import {
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CreateIcon from "@material-ui/icons/Create";
-import { getAllComics} from "./utils/comicker-client";
+import { getPaginatedComics} from "./utils/comicker-client";
 
 const useStyles = makeStyles({
   root: {
@@ -31,28 +32,32 @@ const Home = () => {
   const [value, setValue] = React.useState(0);
   const { authState } = useOktaAuth();
   const [comics, setComics] = useState([]);
+  const [comicPageId, setComicPageId] = useState("first");
   const [comicsLoading, setComicsLoading] = useState(false);
   const history = useHistory();
   const classes = useStyles();
 
-  useEffect(() => {
-    let isCancelled = false;
 
-    getAllComics()
-      .then((data) => {
-        if (!isCancelled) {
-          const [comicList] = data;
-          setComics(comicList);
-          setComicsLoading(false);
-        }
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setComics([]);
+  function getComicPage() {
+    getPaginatedComics(comicPageId)
+    .then((data) => {
+        const [comicList] = data;
+        setComics(comicList.comics);
+        setComicPageId(comicList.pageId)
         setComicsLoading(false);
-      });
-
+      
+    })
+    .catch((error) => {
+      console.log(error.message);
+      setComics([]);
+      setComicsLoading(false);
+    });
     setComicsLoading(true);
+  }
+
+  useEffect(() => {
+    getComicPage()
+    
   }, []);
 
   if (authState.isPending) {
@@ -103,6 +108,13 @@ const Home = () => {
               </Container>
             );
           })}
+          {comicPageId && <Button
+        variant="contained"
+        color="primary"
+        onClick={() => getComicPage()}
+      >
+        View More Comics
+      </Button>}
           <BottomNavigation
             value={value}
             onChange={(event, newValue) => {
