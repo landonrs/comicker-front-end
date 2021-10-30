@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { createComic} from "../../utils/comicker-client";
+import { createComic } from "../../utils/comicker-client";
 import {
   Button,
   CircularProgress,
@@ -26,30 +26,29 @@ const ComicCreator = () => {
 
   const onCreate = async (title) => {
     html2canvas(document.querySelector("#comicPanelImage")).then((canvas) => {
-      canvas.toBlob(function(imageBlob) {
-          createComic({ title, comicId: comicId, parentPanelId: panelId })
-        .then( async (data) => {
-          const {imageUrl} = data[0]
-          var file = new File([imageBlob], "panel.jpg");
+      canvas.toBlob(function (imageBlob) {
+        createComic({ title, comicId: comicId, parentPanelId: panelId })
+          .then(async (data) => {
+            const { imageUrl } = data[0];
+            var file = new File([imageBlob], "panel.jpg");
 
-          await fetch(imageUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "multipart/form-data"
-            },
-            body: file
+            await fetch(imageUrl, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              body: file,
+            });
+
+            setUploadingComic(false);
+            setSuccess(true);
           })
-          
-          setUploadingComic(false);
-          setSuccess(true);
-        })
-        .catch((error) => {
-          console.log(error.message);
-          setUploadingComic(false);
-          setSuccess(false);
-        });
+          .catch((error) => {
+            console.log(error.message);
+            setUploadingComic(false);
+            setSuccess(false);
+          });
       });
-      
     });
 
     setDisplayConfirmDialog(false);

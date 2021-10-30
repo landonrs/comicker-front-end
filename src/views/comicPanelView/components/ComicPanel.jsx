@@ -28,8 +28,8 @@ const ComicPanel = (props) => {
   const { userInfo, panelNode, dataUri, onCreatePanel, onVote } = props;
   const classes = useStyles();
   const [panelImageLoaded, setPanelImageLoaded] = useState(false);
-  const panelData = panelNode.panelData
-  const panelParentId = panelNode.parentId
+  const panelData = panelNode.panelData;
+  const panelParentId = panelNode.parentId;
 
   const [userHasVoted, setUserHasVoted] = useState(
     userIdInPanelVotes(panelData, userInfo)

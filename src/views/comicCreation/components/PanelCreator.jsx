@@ -49,12 +49,10 @@ const PanelCreator = (props) => {
 
   // state for the speech items
   const [draggableItems, setDraggableItems] = useState([]);
-  const [currentSelectedSpeechItem, setCurrentSelectedSpeechItem] = useState(
-    null
-  );
-  const [comicSpeechStageSelected, setComicSpeechStageSelected] = useState(
-    false
-  );
+  const [currentSelectedSpeechItem, setCurrentSelectedSpeechItem] =
+    useState(null);
+  const [comicSpeechStageSelected, setComicSpeechStageSelected] =
+    useState(false);
   const [showTextDialog, setShowTextDialog] = useState(false);
   const [showBubbleSelectDialog, setShowBubbleSelectDialog] = useState(false);
 
