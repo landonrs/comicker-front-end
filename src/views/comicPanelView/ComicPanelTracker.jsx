@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
-import ComicPanel from "./components/ComicPanel";
+import {
+  Button,
+  Box,
+  Card,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
 import ComicTree from "../../utils/comic-tree";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import { Slide } from "@material-ui/core";
 import { voteOnComicPanel } from "../../utils/comicker-client";
 import { useOktaAuth } from "@okta/okta-react";
@@ -18,7 +31,15 @@ const useStyles = makeStyles({
   root: {
     height: "100%",
   },
+  canvasBorder: {
+    display: "inline-block",
+  },
+  panelImage: { width: "100%", marginTop: "0%" },
 });
+
+const userIdInPanelVotes = (panelData, userInfo) => {
+  return panelData.voterIds.includes(userInfo?.sub);
+};
 
 const ComicPanelTracker = (props) => {
   const { comicId } = useParams();
@@ -30,12 +51,20 @@ const ComicPanelTracker = (props) => {
 
   const [comicTree, setComicTree] = useState(null);
 
+  const { authState, authService } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
   // The current panel the user is viewing
   const [currentPanel, setCurrentPanel] = useState(
     getStartingPanel(location.state.comicData)
   );
+
+  const [userHasVoted, setUserHasVoted] = useState(
+    userIdInPanelVotes(currentPanel.panelData, userInfo)
+  );
+
   // used to track which child panel to go to if user looks at next panel
-  const [lastChildPanelVisited, setLastChildPanelVisited] = useState(null)
+  const [lastChildPanelVisited, setLastChildPanelVisited] = useState(null);
 
   // used to track ordering of all siblings of a parent
   const [currentColumnPanels, setCurrentColumnPanels] = useState([]);
@@ -44,11 +73,13 @@ const ComicPanelTracker = (props) => {
   const [slideIn, setSlideIn] = useState(true);
 
   const showPreviousPanel = (eventData) => {
-    const previousPanelNode = comicTree.getParentPanel(currentPanel.panelData.panelId);
+    const previousPanelNode = comicTree.getParentPanel(
+      currentPanel.panelData.panelId
+    );
 
     if (previousPanelNode) {
       console.log("moving to previous panel", previousPanelNode);
-      setLastChildPanelVisited(currentPanel)
+      setLastChildPanelVisited(currentPanel);
       setSlideDirection(LEFT);
       // exit current panel
       setSlideIn(false);
@@ -70,10 +101,14 @@ const ComicPanelTracker = (props) => {
   };
 
   const showNextPanel = (eventData) => {
-    const childPanelNodes = comicTree.getChildPanels(currentPanel.panelData.panelId);
+    const childPanelNodes = comicTree.getChildPanels(
+      currentPanel.panelData.panelId
+    );
 
     if (childPanelNodes.length) {
-      const childPanel = lastChildPanelVisited ? lastChildPanelVisited : childPanelNodes[0]
+      const childPanel = lastChildPanelVisited
+        ? lastChildPanelVisited
+        : childPanelNodes[0];
       console.log("moving to next panel", childPanel);
       setSlideDirection(RIGHT);
       // exit current panel
@@ -82,7 +117,7 @@ const ComicPanelTracker = (props) => {
       setCurrentColumnPanels(childPanelNodes);
 
       // this is reset to avoid user being able to scroll to right infinitely
-      setLastChildPanelVisited(null)
+      setLastChildPanelVisited(null);
 
       setTransitionTimeout(LEFT, childPanel);
     }
@@ -99,7 +134,7 @@ const ComicPanelTracker = (props) => {
         currentColumnPanels[panelIndex - 1].panelData
       );
       // this is reset to avoid mismtched rows
-      setLastChildPanelVisited(null)
+      setLastChildPanelVisited(null);
 
       setSlideDirection(UP);
       // exit current panel
@@ -121,7 +156,7 @@ const ComicPanelTracker = (props) => {
       );
 
       // this is reset to avoid mismtched rows
-      setLastChildPanelVisited(null)
+      setLastChildPanelVisited(null);
 
       setSlideDirection(DOWN);
       // exit current panel
@@ -157,8 +192,6 @@ const ComicPanelTracker = (props) => {
       });
   };
 
-  const { authState, authService } = useOktaAuth();
-  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     if (!authState.isAuthenticated) {
       // When user isn't authenticated, forget any user info
@@ -173,17 +206,112 @@ const ComicPanelTracker = (props) => {
 
   return (
     <div className={classes.root} {...handlers}>
-      <Slide direction={slideDirection} in={slideIn}>
-        <div>
-          <ComicPanel
-            userInfo={userInfo}
-            panelNode={currentPanel}
-            dataUri={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
-            onCreatePanel={onCreateNewPanel}
-            onVote={onVote}
-          />
-        </div>
-      </Slide>
+      <Paper>
+        <Card>
+          <Grid container direction="column" item xs={12} align="center">
+            <Grid item justify="center">
+              <IconButton
+                color={"primary"}
+                disabled={false}
+                onClick={showAlternativeAbovePanel}
+              >
+                <KeyboardArrowUp />
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" xs={12}>
+            <Grid item xs={2}>
+              <IconButton
+                color={"primary"}
+                disabled={false}
+                onClick={showPreviousPanel}
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Grid>
+            <Grid item xs={8}>
+              <Slide direction={slideDirection} in={slideIn}>
+                <div>
+                  <Box
+                    className={classes.canvasBorder}
+                    disableGutters={true}
+                    border={5}
+                  >
+                    <img
+                      className={classes.panelImage}
+                      src={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
+                      alt="comic"
+                    />
+                  </Box>
+                </div>
+              </Slide>
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton
+                color={"primary"}
+                disabled={false}
+                onClick={showNextPanel}
+              >
+                <KeyboardArrowRight />
+              </IconButton>
+            </Grid>
+            <Grid container direction="column" item xs={12} align="center">
+            <Grid item justify="center">
+              <IconButton
+                color={"primary"}
+                disabled={false}
+                onClick={showAlternativeBelowPanel}
+              >
+                <KeyboardArrowDown />
+              </IconButton>
+            </Grid>
+          </Grid>
+            <Typography>{`Author: ${currentPanel.panelData.author}`}</Typography>
+          </Grid>
+        </Card>
+      </Paper>
+      <Grid container direction="row" alignItems="center">
+        <Grid className={classes.arrow} item>
+          <IconButton
+            color={userHasVoted ? "primary" : "default"}
+            disableRipple={userHasVoted}
+            onClick={
+              !userHasVoted
+                ? () => onVote(currentPanel.panelData.panelId)
+                : () => {}
+            }
+          >
+            <ArrowUpwardIcon />
+          </IconButton>
+        </Grid>
+        <Grid className={classes.voteBox} item>
+          <Typography variant="h6">
+            {currentPanel.panelData.voterIds
+              ? currentPanel.panelData.voterIds.length
+              : 0}
+          </Typography>
+        </Grid>
+        <Grid className={classes.spacer} item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(e) => onCreateNewPanel(currentPanel.panelData.panelId)}
+          >
+            Add Next Panel
+          </Button>
+        </Grid>
+        <Grid item>
+          {currentPanel.parentId && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => onCreateNewPanel(currentPanel.parentId)}
+            >
+              Add Alternative Panel
+            </Button>
+          )}
+        </Grid>
+      </Grid>
     </div>
   );
 };
