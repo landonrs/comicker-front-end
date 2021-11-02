@@ -270,8 +270,8 @@ const ComicPanelTracker = (props) => {
           </Grid>
         </Card>
       </Paper>
-      <Grid container direction="row" alignItems="center">
-        <Grid className={classes.arrow} item>
+      <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
+        <Grid className={classes.arrow} item xs={1}>
           <IconButton
             color={userHasVoted ? "primary" : "default"}
             disableRipple={userHasVoted}
@@ -284,14 +284,14 @@ const ComicPanelTracker = (props) => {
             <ArrowUpwardIcon />
           </IconButton>
         </Grid>
-        <Grid className={classes.voteBox} item>
+        <Grid item xs={1}>
           <Typography variant="h6">
             {currentPanel.panelData.voterIds
               ? currentPanel.panelData.voterIds.length
               : 0}
           </Typography>
         </Grid>
-        <Grid className={classes.spacer} item>
+        <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
@@ -300,7 +300,7 @@ const ComicPanelTracker = (props) => {
             Add Next Panel
           </Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={6}>
           {currentPanel.parentId && (
             <Button
               variant="contained"
