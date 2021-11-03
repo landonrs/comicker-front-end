@@ -19,7 +19,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import { Slide } from "@material-ui/core";
-import { voteOnComicPanel } from "../../utils/comicker-client";
+import { voteOnComicPanel, getComic } from "../../utils/comicker-client";
 import { useOktaAuth } from "@okta/okta-react";
 
 const DOWN = "down";
@@ -47,7 +47,7 @@ const ComicPanelTracker = (props) => {
   const history = useHistory();
   const classes = useStyles();
 
-  const comicData = location.state.comicData;
+  const [comicTreeLoading, setComicTreeLoading] = useState(true);
 
   const [comicTree, setComicTree] = useState(null);
 
@@ -57,6 +57,9 @@ const ComicPanelTracker = (props) => {
   // The current panel the user is viewing
   const [currentPanel, setCurrentPanel] = useState(
     getStartingPanel(location.state.comicData)
+  );
+  const [panelVoteCount, setPanelVoteCount] = useState(
+    currentPanel.panelData.voterIds.length
   );
 
   const [userHasVoted, setUserHasVoted] = useState(
@@ -97,6 +100,8 @@ const ComicPanelTracker = (props) => {
       setSlideDirection(direction);
       setCurrentPanel(newPanel);
       setSlideIn(true);
+      setUserHasVoted(userIdInPanelVotes(newPanel.panelData, userInfo));
+      setPanelVoteCount(newPanel.panelData.voterIds.length);
     }, 250);
   };
 
@@ -174,11 +179,14 @@ const ComicPanelTracker = (props) => {
   });
 
   useEffect(() => {
-    // TODO load image data for current panel and all children
-    console.log(comicId);
-    console.log(comicData);
-    setComicTree(new ComicTree(comicData));
-  }, []);
+    getComic(comicId).then((result) => {
+      const [data] = result;
+      setComicTree(new ComicTree(data));
+      setComicTreeLoading(false);
+    });
+
+    setComicTreeLoading(true);
+  }, [comicId]);
 
   const onCreateNewPanel = (panelId) => {
     history.push(`/create/${comicId}/${panelId}`);
@@ -186,10 +194,15 @@ const ComicPanelTracker = (props) => {
 
   const onVote = (panelId) => {
     voteOnComicPanel(comicId, panelId)
-      .then((result) => {})
+      .then((result) => {
+        const [data] = result;
+        setComicTree(new ComicTree(data.comicData));
+      })
       .catch((error) => {
         console.log(error.message);
       });
+    // automatically update counter so user does not have to wait for response
+    setPanelVoteCount((panelVoteCount) => panelVoteCount + 1);
   };
 
   useEffect(() => {
@@ -208,11 +221,14 @@ const ComicPanelTracker = (props) => {
     <div className={classes.root} {...handlers}>
       <Paper>
         <Card>
+          {comicTreeLoading && (
+            <Typography variant="h5">Loading Comic Panels...</Typography>
+          )}
           <Grid container direction="column" item xs={12} align="center">
             <Grid item justify="center">
               <IconButton
                 color={"primary"}
-                disabled={false}
+                disabled={comicTreeLoading}
                 onClick={showAlternativeAbovePanel}
               >
                 <KeyboardArrowUp />
@@ -223,7 +239,7 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
-                disabled={false}
+                disabled={comicTreeLoading}
                 onClick={showPreviousPanel}
               >
                 <KeyboardArrowLeft />
@@ -249,23 +265,23 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
-                disabled={false}
+                disabled={comicTreeLoading}
                 onClick={showNextPanel}
               >
                 <KeyboardArrowRight />
               </IconButton>
             </Grid>
             <Grid container direction="column" item xs={12} align="center">
-            <Grid item justify="center">
-              <IconButton
-                color={"primary"}
-                disabled={false}
-                onClick={showAlternativeBelowPanel}
-              >
-                <KeyboardArrowDown />
-              </IconButton>
+              <Grid item justify="center">
+                <IconButton
+                  color={"primary"}
+                  disabled={comicTreeLoading}
+                  onClick={showAlternativeBelowPanel}
+                >
+                  <KeyboardArrowDown />
+                </IconButton>
+              </Grid>
             </Grid>
-          </Grid>
             <Typography>{`Author: ${currentPanel.panelData.author}`}</Typography>
           </Grid>
         </Card>
@@ -274,22 +290,14 @@ const ComicPanelTracker = (props) => {
         <Grid className={classes.arrow} item xs={1}>
           <IconButton
             color={userHasVoted ? "primary" : "default"}
-            disableRipple={userHasVoted}
-            onClick={
-              !userHasVoted
-                ? () => onVote(currentPanel.panelData.panelId)
-                : () => {}
-            }
+            disabled={userInfo && userHasVoted}
+            onClick={() => onVote(currentPanel.panelData.panelId)}
           >
             <ArrowUpwardIcon />
           </IconButton>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant="h6">
-            {currentPanel.panelData.voterIds
-              ? currentPanel.panelData.voterIds.length
-              : 0}
-          </Typography>
+          <Typography variant="h6">{panelVoteCount}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Button

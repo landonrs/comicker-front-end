@@ -6,6 +6,10 @@ const getPaginatedComics = (comicPageId) => {
   return client(`${BASE_PATH}/comics/${comicPageId}`);
 };
 
+const getComic = (comicId) => {
+  return client(`${BASE_PATH}/comics/comic/${comicId}`);
+};
+
 const voteOnComicPanel = (comicId, panelId) => {
   return client(`${BASE_PATH}/comics/${comicId}/vote`, {
     body: { panelId },
@@ -26,4 +30,10 @@ const createComic = (comicData) => {
   });
 };
 
-export { getPaginatedComics, createComic, addPanel, voteOnComicPanel };
+export {
+  getPaginatedComics,
+  getComic,
+  createComic,
+  addPanel,
+  voteOnComicPanel,
+};
