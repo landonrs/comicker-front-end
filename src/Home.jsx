@@ -18,6 +18,7 @@ import {
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CreateIcon from "@material-ui/icons/Create";
+import ComicTree from "./utils/comic-tree";
 import { getPaginatedComics } from "./utils/comicker-client";
 
 const useStyles = makeStyles({
@@ -87,7 +88,7 @@ const Home = () => {
                 <Divider orientation="vertical" />
                 <Grid container direction="row" alignItems="center">
                   <Grid className={classes.voteBox} item>
-                    <Typography variant="caption">total votes: 5</Typography>
+                    <Typography variant="caption">{`total votes: ${ComicTree.getTotalComicVoteCount(comicData)}`}</Typography>
                   </Grid>
                 </Grid>
               </Card>

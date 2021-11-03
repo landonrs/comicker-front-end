@@ -13,6 +13,16 @@ class ComicTree {
     this.nodes = buildComicTree(comicData, sortBy);
   }
 
+  static getTotalComicVoteCount(comicData) {
+    let totalVoteCount = 0;
+    const nodes = buildComicTree(comicData);
+    nodes.forEach((panelNode) => {
+      totalVoteCount += panelNode.voteCount;
+    });
+
+    return totalVoteCount;
+  }
+
   /**
    * Get the Parent Panel data for the specified panel, returns null if starting panel.
    * @param {*} panelId
@@ -90,6 +100,7 @@ class PanelNode {
     this.parentId = parentId;
     this.panelId = panelData.panelId;
     this.panelData = panelData;
+    this.voteCount = panelData.voterIds.length;
   }
 }
 
