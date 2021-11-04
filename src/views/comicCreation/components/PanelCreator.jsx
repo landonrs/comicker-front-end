@@ -4,6 +4,8 @@ import CanvasDraw from "react-canvas-draw";
 import { Box, Button, IconButton, Slider, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateIcon from "@material-ui/icons/Create";
+import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
+import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -27,7 +29,7 @@ const useStyles = makeStyles({
 });
 
 const ToolButton = (props) => {
-  const { icon, onClick, isSelected = false } = props;
+  const { icon, onClick, isSelected = false, disabled = false } = props;
 
   return (
     <IconButton
@@ -35,6 +37,7 @@ const ToolButton = (props) => {
       color={isSelected ? "secondary" : "primary"}
       aria-label="upload picture"
       component="span"
+      disabled={disabled}
     >
       {icon}
     </IconButton>
@@ -51,7 +54,7 @@ const PanelCreator = (props) => {
 
   // state for the speech items
   const [draggableItems, setDraggableItems] = useState([]);
-  const [currentSelectedSpeechItem, setCurrentSelectedSpeechItem] =
+  const [currentSelectedSpeechItemIndex, setCurrentSelectedSpeechItemIndex] =
     useState(null);
   const [comicSpeechStageSelected, setComicSpeechStageSelected] =
     useState(false);
@@ -129,18 +132,37 @@ const PanelCreator = (props) => {
     setDraggableItems(speechItems);
   };
 
+  const onSpeechItemMovedToFront = () => {
+    const speechItems = draggableItems.slice();
+    // remove from the list:
+    const item = speechItems.splice(currentSelectedSpeechItemIndex, 1);
+    // add to the top (end of array)
+    speechItems.push(item[0]);
+    setDraggableItems(speechItems)
+    setCurrentSelectedSpeechItemIndex(speechItems.length - 1)
+  };
+
+  const onSpeechItemMovedToBack = () => {
+    const speechItems = draggableItems.slice();
+    // remove from the list:
+    const item = speechItems.splice(currentSelectedSpeechItemIndex, 1);
+    // add to the bottom (beginning of array)
+    speechItems.unshift(item[0]);
+    setDraggableItems(speechItems)
+    setCurrentSelectedSpeechItemIndex(0)
+    
+  };
+
   const onSpeechItemSelected = (itemIndex) => {
-    console.log("speech item selected at ", itemIndex);
-    setCurrentSelectedSpeechItem(itemIndex);
+    setCurrentSelectedSpeechItemIndex(itemIndex);
   };
 
   const onDeleteSelectedItem = () => {
-    console.log("called delete", currentSelectedSpeechItem);
-    if (currentSelectedSpeechItem !== null) {
+    if (currentSelectedSpeechItemIndex !== null) {
       // remove item from array
-      draggableItems.splice(currentSelectedSpeechItem, 1);
+      draggableItems.splice(currentSelectedSpeechItemIndex, 1);
       setDraggableItems([...draggableItems]);
-      setCurrentSelectedSpeechItem(null);
+      setCurrentSelectedSpeechItemIndex(null);
     }
   };
 
@@ -160,6 +182,16 @@ const PanelCreator = (props) => {
             <ToolButton
               icon={<ChatBubbleOutlineIcon />}
               onClick={() => setShowBubbleSelectDialog(true)}
+            />
+            <ToolButton
+              icon={<ArrowUpwardOutlinedIcon />}
+              onClick={onSpeechItemMovedToFront}
+              disabled={!selectedDraggableItemId}
+            />
+            <ToolButton
+              icon={<ArrowDownwardOutlinedIcon />}
+              onClick={onSpeechItemMovedToBack}
+              disabled={!selectedDraggableItemId}
             />
             <ToolButton
               icon={<DeleteForeverIcon />}
