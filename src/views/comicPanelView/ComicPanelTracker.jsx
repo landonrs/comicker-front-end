@@ -76,6 +76,10 @@ const ComicPanelTracker = (props) => {
   const [slideIn, setSlideIn] = useState(true);
 
   const showPreviousPanel = (eventData) => {
+    if (comicTree == null) {
+      return;
+    }
+
     const previousPanelNode = comicTree.getParentPanel(
       currentPanel.panelData.panelId
     );
@@ -106,6 +110,10 @@ const ComicPanelTracker = (props) => {
   };
 
   const showNextPanel = (eventData) => {
+    if (comicTree == null) {
+      return;
+    }
+
     const childPanelNodes = comicTree.getChildPanels(
       currentPanel.panelData.panelId
     );
@@ -129,6 +137,10 @@ const ComicPanelTracker = (props) => {
   };
 
   const showAlternativeAbovePanel = (eventData) => {
+    if (comicTree == null) {
+      return;
+    }
+
     const panelIndex = currentColumnPanels.findIndex(
       (panel) => panel.panelId === currentPanel.panelData.panelId
     );
@@ -150,6 +162,10 @@ const ComicPanelTracker = (props) => {
   };
 
   const showAlternativeBelowPanel = (eventData) => {
+    if (comicTree == null) {
+      return;
+    }
+
     const panelIndex = currentColumnPanels.findIndex(
       (panel) => panel.panelId === currentPanel.panelData.panelId
     );
