@@ -105,7 +105,6 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
           const scaleY = node.scaleY();
 
           if (scaleY >= 0.9 && scaleY <= 1.01) {
-            console.log("only x scale changed");
             // by removing this, we allow the component to determine what the height should be
             // so it resizes correctly
             delete shapeProps.height;
@@ -120,7 +119,6 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
           // and NOT its width or height
           // but in the store we have only width and height
           // to match the data better we will reset scale on transform end
-          console.log("event", e);
 
           const node = shapeRef.current;
           const scaleX = node.scaleX();
@@ -131,19 +129,18 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
           node.scaleY(1);
 
           if (scaleY >= 0.9 && scaleY <= 1.01) {
-            console.log("only x scale changed");
             onChange({
               ...shapeProps,
               width: Math.min(node.width() * scaleX, MAX_WIDTH),
             });
           } else {
-            console.log("current font size:", node.fontSize());
-            console.log("scaleX", scaleX);
-            console.log("scaleY", scaleY);
-            console.log(
-              "scaled font size",
-              Math.max(5, node.fontSize() * scaleX)
-            );
+            // console.log("current font size:", node.fontSize());
+            // console.log("scaleX", scaleX);
+            // console.log("scaleY", scaleY);
+            // console.log(
+            //   "scaled font size",
+            //   Math.max(5, node.fontSize() * scaleX)
+            // );
 
             // delete shapeProps.width;
             delete shapeProps.height;
