@@ -1,8 +1,7 @@
 import React from "react";
-import { Stage, Layer, Image, Text, Transformer } from "react-konva";
+import { Image, Text, Transformer } from "react-konva";
 import useImage from "use-image";
 
-const MIN_WIDTH = 20;
 const MAX_WIDTH = 300;
 
 const SpeechBubbleImage = ({ shapeProps, isSelected, onSelect, onChange }) => {
@@ -186,60 +185,4 @@ const TextItem = ({ shapeProps, isSelected, onSelect, onChange }) => {
   );
 };
 
-const ComicStage = (props) => {
-  const { stageSelected, items, onChange, onItemSelect } = props;
-  const [selectedId, selectShape] = React.useState(null);
-
-  const checkDeselect = (e) => {
-    // deselect when clicked on empty area
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      selectShape(null);
-      onItemSelect(null);
-    }
-  };
-
-  return (
-    <Stage
-      width={300}
-      height={300}
-      onMouseDown={checkDeselect}
-      onTouchStart={checkDeselect}
-      style={{ position: "absolute", zIndex: stageSelected ? 999 : 0 }}
-    >
-      <Layer>
-        {items.map((item, i) => {
-          if (item.type === "bubble") {
-            return (
-              <SpeechBubbleImage
-                key={item.id}
-                shapeProps={item}
-                isSelected={item.id === selectedId}
-                onSelect={() => {
-                  selectShape(item.id);
-                  onItemSelect(i);
-                }}
-                onChange={(newAttrs) => onChange(newAttrs, i)}
-              />
-            );
-          } else {
-            return (
-              <TextItem
-                key={item.id}
-                shapeProps={item}
-                isSelected={item.id === selectedId}
-                onSelect={() => {
-                  selectShape(item.id);
-                  onItemSelect(i);
-                }}
-                onChange={(newAttrs) => onChange(newAttrs, i)}
-              />
-            );
-          }
-        })}
-      </Layer>
-    </Stage>
-  );
-};
-
-export default ComicStage;
+export {SpeechBubbleImage, TextItem};

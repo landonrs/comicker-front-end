@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SketchPicker } from "react-color";
 import CanvasDraw from "react-canvas-draw";
-import { Box, IconButton, Slider, Toolbar } from "@material-ui/core";
+import { Box, Button, IconButton, Slider, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateIcon from "@material-ui/icons/Create";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
@@ -9,7 +9,8 @@ import TextFieldsIcon from "@material-ui/icons/TextFields";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import UndoIcon from "@material-ui/icons/Undo";
 import { BiEraser } from "react-icons/bi";
-import ComicStage from "./SpeechBubbleHelper";
+import { SpeechBubbleImage, TextItem } from "./SpeechBubbleHelper";
+import { Stage, Layer } from "react-konva";
 import TextSelectDialog from "./TextSelectDialog";
 import SpeechBubbleSelectDialog from "./SpeechBubbleSelectDialog";
 
@@ -41,6 +42,7 @@ const ToolButton = (props) => {
 };
 
 const PanelCreator = (props) => {
+  const { onUpload } = props;
   // state for the drawable canvas
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
@@ -55,6 +57,17 @@ const PanelCreator = (props) => {
     useState(false);
   const [showTextDialog, setShowTextDialog] = useState(false);
   const [showBubbleSelectDialog, setShowBubbleSelectDialog] = useState(false);
+
+  const [selectedDraggableItemId, setSelectedDraggableItemId] = React.useState(null);
+
+  const checkDeselect = (e) => {
+    // deselect when clicked on empty area
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      setSelectedDraggableItemId(null);
+      onSpeechItemSelected(null);
+    }
+  };
 
   const classes = useStyles();
 
@@ -82,21 +95,21 @@ const PanelCreator = (props) => {
       src: imageSrc,
       id: `bubble${Date.now()}`,
     };
-    console.log("adding bubble");
     setDraggableItems((draggableItems) => [...draggableItems, speechBubble]);
 
-    console.log("drag items", draggableItems);
-
     setShowBubbleSelectDialog(false);
+    setSelectedDraggableItemId(speechBubble.id);
   };
 
   const onTextItemAdded = (textValue) => {
+    const width = Math.min(textValue.length * 15, 100);
+
     const textItem = {
       type: "text",
       x: 50,
       y: 50,
-      fontSize: 12,
-      width: 100,
+      fontSize: 20,
+      width: width,
       text: textValue,
       align: "left",
       fill: "black",
@@ -104,11 +117,10 @@ const PanelCreator = (props) => {
       id: `text${Date.now()}`,
     };
 
-    console.log("adding text");
     setDraggableItems((draggableItems) => [...draggableItems, textItem]);
 
-    console.log("drag items", draggableItems);
     setShowTextDialog(false);
+    setSelectedDraggableItemId(textItem.id);
   };
 
   const onSpeechItemChanged = (newAttrs, index) => {
@@ -184,12 +196,48 @@ const PanelCreator = (props) => {
       {/* <SketchPicker color={selectedColor} onChangeComplete={onColorChange} /> */}
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
         <div id={"comicPanelImage"}>
-          <ComicStage
-            stageSelected={comicSpeechStageSelected}
-            items={draggableItems}
-            onChange={onSpeechItemChanged}
-            onItemSelect={onSpeechItemSelected}
-          />
+          <Stage
+            width={300}
+            height={300}
+            onMouseDown={checkDeselect}
+            onTouchStart={checkDeselect}
+            style={{
+              position: "absolute",
+              zIndex: comicSpeechStageSelected ? 999 : 0,
+            }}
+          >
+            <Layer>
+              {draggableItems.map((item, i) => {
+                if (item.type === "bubble") {
+                  return (
+                    <SpeechBubbleImage
+                      key={item.id}
+                      shapeProps={item}
+                      isSelected={item.id === selectedDraggableItemId}
+                      onSelect={() => {
+                        setSelectedDraggableItemId(item.id);
+                        onSpeechItemSelected(i);
+                      }}
+                      onChange={(newAttrs) => onSpeechItemChanged(newAttrs, i)}
+                    />
+                  );
+                } else {
+                  return (
+                    <TextItem
+                      key={item.id}
+                      shapeProps={item}
+                      isSelected={item.id === selectedDraggableItemId}
+                      onSelect={() => {
+                        setSelectedDraggableItemId(item.id);
+                        onSpeechItemSelected(i);
+                      }}
+                      onChange={(newAttrs) => onSpeechItemChanged(newAttrs, i)}
+                    />
+                  );
+                }
+              })}
+            </Layer>
+          </Stage>
           <CanvasDraw
             ref={(canvasDraw) => setCanvasRef(canvasDraw)}
             hideGrid={true}
@@ -205,7 +253,10 @@ const PanelCreator = (props) => {
       <Toolbar>
         <ToolButton
           icon={<CreateIcon />}
-          onClick={() => setComicSpeechStageSelected(false)}
+          onClick={() => {
+            setComicSpeechStageSelected(false);
+            setSelectedDraggableItemId(null);
+          }}
           isSelected={!comicSpeechStageSelected}
         />
         <ToolButton
@@ -226,6 +277,16 @@ const PanelCreator = (props) => {
         onClose={() => setShowBubbleSelectDialog(false)}
         onConfirm={onSpeechBubbleSelected}
       />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          setSelectedDraggableItemId(null);
+          onUpload();
+        }}
+      >
+        Upload
+      </Button>
     </div>
   );
 };

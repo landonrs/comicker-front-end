@@ -69,15 +69,7 @@ const ComicCreator = () => {
 
   return (
     <div>
-      <PanelCreator />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => saveAndConfirm()}
-      >
-        Upload
-      </Button>
-
+      <PanelCreator onUpload={saveAndConfirm}/>
       <Dialog
         onClose={() => setDisplayConfirmDialog(false)}
         open={displayConfirmDialog}
