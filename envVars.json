@@ -1,5 +1,8 @@
 {
   "local": {
     "COMICKER_BASE_PATH": "http://localhost:8080"
+  },
+  "prod": {
+    "COMICKER_BASE_PATH": "https://g4xeb4gjih.execute-api.us-east-1.amazonaws.com"
   }
 }
