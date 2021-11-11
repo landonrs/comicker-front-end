@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  Grid,
   TextField,
 } from "@material-ui/core";
 import PanelCreator from "./components/PanelCreator";
@@ -70,7 +71,9 @@ const ComicCreator = () => {
 
   return (
     <div>
+      <Grid container direction="column" item xs={12} align="center">
       <PanelCreator onUpload={saveAndConfirm}/>
+      </Grid>
       <Dialog
         onClose={() => setDisplayConfirmDialog(false)}
         open={displayConfirmDialog}
