@@ -30,6 +30,8 @@ const useStyles = makeStyles({
 });
 
 const Home = () => {
+  // allow user to scroll
+  document.body.style.overflow = 'visible';
   const [value, setValue] = React.useState(0);
   const { authState } = useOktaAuth();
   const [comics, setComics] = useState([]);
