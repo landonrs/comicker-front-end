@@ -1,12 +1,39 @@
 import React, { useState } from "react";
 import { OktaAuth } from "@okta/okta-auth-js";
 import { useOktaAuth } from "@okta/okta-react";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Button,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: "flex",
+    flexFlow: "column",
+    height: "100vh",
+    backgroundColor: "#3F51B5"
+  },
+  formInput: {
+    backgroundColor: "white",
+    marginTop: "5%"
+  },
+  loginButton: {
+    backgroundColor: "white",
+    height: 50,
+    width: 200
+  }
+}));
 
 const SignInForm = ({ issuer }) => {
   const { authService } = useOktaAuth();
   const [sessionToken, setSessionToken] = useState();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const classes = useStyles();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,27 +69,47 @@ const SignInForm = ({ issuer }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={handleUsernameChange}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </label>
-      <input id="submit" type="submit" value="Submit" />
-    </form>
+    <Paper className={classes.root}>
+      <Grid container direction="column" item xs={12} align="center">
+        <Grid item justify="center" style={{ marginTop: "30%" }}>
+          <Typography
+            variant="h2"
+            color="inherit"
+            align="center"
+            style={{ color: "white" }}
+          >
+            Comicker
+          </Typography>
+        </Grid>
+        <form onSubmit={handleSubmit}>
+        <Grid item justify="center">
+          <TextField
+            className={classes.formInput}
+            id="username"
+            type="text"
+            label={"Username:"}
+            value={username}
+            onChange={handleUsernameChange}
+            variant="filled"
+          />
+          </Grid>
+          <Grid item justify="center">
+          <TextField
+            className={classes.formInput}
+            id="password"
+            type="password"
+            label={"Password:"}
+            value={password}
+            onChange={handlePasswordChange}
+            variant="filled"
+          />
+          </Grid>
+          <Grid item justify="center" style={{ marginTop: "5%" }}>
+          <Button className={classes.loginButton} fullWidth={true} id="submit" type="submit">Login</Button>
+          </Grid>
+        </form>
+      </Grid>
+    </Paper>
   );
 };
 export default SignInForm;

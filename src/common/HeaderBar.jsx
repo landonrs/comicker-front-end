@@ -58,7 +58,8 @@ const HeaderBar = () => {
   );
 
   return (
-    <AppBar position="sticky">
+    <>
+    {authState.isAuthenticated && <AppBar position="sticky">
       <Toolbar>
         <Link to="/">
           <img className={classes.logo} alt="Logo" src="/images/logo192.png" />
@@ -86,7 +87,8 @@ const HeaderBar = () => {
           <div>{button}</div>
         )}
       </Toolbar>
-    </AppBar>
+    </AppBar>}
+    </>
   );
 };
 

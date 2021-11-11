@@ -24,8 +24,8 @@ const AppWithRouterAccess = () => {
       scopes={["openid", "profile", "groups"]}
     >
       <HeaderBar />
-      <Route path="/" exact={true} component={Home} />
-      <Route path="/view/:comicId" exact={true} component={ComicPanelTracker} />
+      <SecureRoute path="/" exact={true} component={Home} />
+      <SecureRoute path="/view/:comicId" exact={true} component={ComicPanelTracker} />
       <SecureRoute path="/protected" component={Protected} />
       <SecureRoute path="/create" exact={true} component={ComicCreator} />
       <SecureRoute
