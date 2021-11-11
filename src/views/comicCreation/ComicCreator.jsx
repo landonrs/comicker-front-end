@@ -14,6 +14,7 @@ import PanelCreator from "./components/PanelCreator";
 import html2canvas from "html2canvas";
 
 const ComicCreator = () => {
+  document.body.style.overflow = 'hidden';
   const history = useHistory();
   const { comicId, panelId } = useParams();
 
