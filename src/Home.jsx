@@ -44,7 +44,7 @@ const Home = () => {
     getPaginatedComics(comicPageId)
       .then((data) => {
         const [comicList] = data;
-        setComics((currentComics) => [...currentComics, ...comicList.comics]);
+        setComics((currentComics) => currentComics.concat(comicList.comics));
         setComicPageId(comicList.pageId);
         setComicsLoading(false);
       })
@@ -67,7 +67,7 @@ const Home = () => {
   return (
     <>
       <Paper className={classes.root}>
-        {comics.map((comicData) => {
+        {comics && comics.map((comicData) => {
           console.log("setting comic panel");
           return (
             <Container maxWidth="xs" key={comicData.comic.title}>
