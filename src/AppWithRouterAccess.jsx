@@ -17,7 +17,7 @@ const AppWithRouterAccess = () => {
   return (
     <Security
       issuer="https://dev-2337597.okta.com/oauth2/default"
-      clientId="0oa11x8lf6LsqfwAH5d6"
+      clientId={process.env.REACT_APP_OKTA_APP_ID}
       redirectUri={window.location.origin + "/login/callback"}
       onAuthRequired={onAuthRequired}
       pkce={true}
