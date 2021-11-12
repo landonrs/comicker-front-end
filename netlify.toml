@@ -1,4 +1,4 @@
 [context.production.environment]
   SYSTEM_ENV = "prod"
   REACT_APP_OKTA_APP_ID = "0oa2lmk5q6PoaryzF5d7"
-  CI = false
+  CI = "False"
