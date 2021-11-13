@@ -259,6 +259,7 @@ const ComicPanelTracker = (props) => {
       authService.getUser().then((info) => {
         console.log(info);
         setUserInfo(info);
+        setUserHasVoted(userIdInPanelVotes(currentPanel.panelData, info))
       });
     }
   }, [authState, authService]);
@@ -336,6 +337,7 @@ const ComicPanelTracker = (props) => {
         <Grid className={classes.arrow} item xs={1}>
           <IconButton
             color={userHasVoted ? "secondary" : "default"}
+            disabled={!userInfo}
             onClick={() => {
               if (!userHasVoted) {
               onVote(currentPanel.panelData.panelId)
