@@ -12,7 +12,7 @@ import {
 import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
-import ComicTree from "../../utils/comic-tree";
+import {ComicTree, ROOT_NODE_ID} from "../../utils/comic-tree";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
@@ -74,6 +74,35 @@ const ComicPanelTracker = (props) => {
 
   const [slideDirection, setSlideDirection] = useState(RIGHT);
   const [slideIn, setSlideIn] = useState(true);
+
+
+  const panelIsFirstPanel = (panel) => {
+    return !(panel.parentId && panel.parentId !== ROOT_NODE_ID)
+  }
+
+  const panelDoesNotHaveChildPanels = (panel) => {
+    const childPanelNodes = comicTree.getChildPanels(
+      panel.panelData.panelId
+    );
+
+    return !(childPanelNodes.length)
+  }
+
+  const panelDoesNotHaveAlternativePanelAbove = () => {
+    const panelIndex = currentColumnPanels.findIndex(
+      (panel) => panel.panelId === currentPanel.panelData.panelId
+    );
+
+    return !(panelIndex > 0)
+  }
+
+  const panelDoesNotHaveAlternativePanelBelow = () => {
+    const panelIndex = currentColumnPanels.findIndex(
+      (panel) => panel.panelId === currentPanel.panelData.panelId
+    );
+
+    return !(panelIndex < currentColumnPanels.length - 1)
+  }
 
   const showPreviousPanel = (eventData) => {
     if (comicTree == null) {
@@ -244,7 +273,7 @@ const ComicPanelTracker = (props) => {
             <Grid item justify="center">
               <IconButton
                 color={"primary"}
-                disabled={comicTreeLoading}
+                disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()}
                 onClick={showAlternativeAbovePanel}
               >
                 <KeyboardArrowUp />
@@ -255,7 +284,7 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
-                disabled={comicTreeLoading}
+                disabled={comicTreeLoading || panelIsFirstPanel(currentPanel)}
                 onClick={showPreviousPanel}
               >
                 <KeyboardArrowLeft />
@@ -281,7 +310,7 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
-                disabled={comicTreeLoading}
+                disabled={comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)}
                 onClick={showNextPanel}
               >
                 <KeyboardArrowRight />
@@ -291,7 +320,7 @@ const ComicPanelTracker = (props) => {
               <Grid item justify="center">
                 <IconButton
                   color={"primary"}
-                  disabled={comicTreeLoading}
+                  disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()}
                   onClick={showAlternativeBelowPanel}
                 >
                   <KeyboardArrowDown />
@@ -325,7 +354,7 @@ const ComicPanelTracker = (props) => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          {currentPanel.parentId && (
+          { !panelIsFirstPanel(currentPanel) && (
             <Button
               variant="contained"
               color="primary"

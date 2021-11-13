@@ -18,7 +18,7 @@ import {
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CreateIcon from "@material-ui/icons/Create";
-import ComicTree from "./utils/comic-tree";
+import {ComicTree} from "./utils/comic-tree";
 import { getPaginatedComics } from "./utils/comicker-client";
 
 const useStyles = makeStyles({

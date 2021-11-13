@@ -104,4 +104,4 @@ class PanelNode {
   }
 }
 
-export default ComicTree;
+export {ComicTree, ROOT_NODE_ID};
