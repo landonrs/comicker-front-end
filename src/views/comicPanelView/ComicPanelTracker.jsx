@@ -248,6 +248,7 @@ const ComicPanelTracker = (props) => {
       });
     // automatically update counter so user does not have to wait for response
     setPanelVoteCount((panelVoteCount) => panelVoteCount + 1);
+    setUserHasVoted(true)
   };
 
   useEffect(() => {
@@ -334,15 +335,18 @@ const ComicPanelTracker = (props) => {
       <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
         <Grid className={classes.arrow} item xs={1}>
           <IconButton
-            color={userHasVoted ? "primary" : "default"}
-            disabled={userInfo && userHasVoted}
-            onClick={() => onVote(currentPanel.panelData.panelId)}
+            color={userHasVoted ? "secondary" : "default"}
+            onClick={() => {
+              if (!userHasVoted) {
+              onVote(currentPanel.panelData.panelId)
+              }
+            }}
           >
             <ArrowUpwardIcon />
           </IconButton>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant="h6">{panelVoteCount}</Typography>
+          <Typography style={{marginLeft: "50%"}} variant="h6">{panelVoteCount}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Button
