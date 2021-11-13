@@ -6,7 +6,7 @@ const comicSortType = {
 };
 
 class ComicTree {
-  constructor(comicData, sortBy = comicSortType.VOTE_COUNT_LOW_TO_HIGH) {
+  constructor(comicData, sortBy = comicSortType.VOTE_COUNT_HIGH_TO_LOW) {
     this.comicId = comicData.comicId;
     this.comicData = comicData;
     this.comicSortType = sortBy;

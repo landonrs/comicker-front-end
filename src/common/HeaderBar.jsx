@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
-  Avatar,
   AppBar,
-  Toolbar,
+  Grid,
   Typography,
-  IconButton,
 } from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,7 +13,7 @@ const useStyles = makeStyles({
   root: {
     height: "100%",
   },
-  logo: { height: 34 },
+  logo: { height: 34, marginLeft: "25%" },
   comicRow: { height: 100 },
   headerText: { marginLeft: "15%", marginRight: "10%" },
 });
@@ -59,35 +57,27 @@ const HeaderBar = () => {
 
   return (
     <>
-    {authState.isAuthenticated && <AppBar position="sticky">
-      <Toolbar>
-        <Link to="/">
-          <img className={classes.logo} alt="Logo" src="/images/logo192.png" />
-        </Link>
-
-        <Typography
-          className={classes.headerText}
-          variant="h4"
-          color="inherit"
-          align="center"
-        >
-          Comicker
-        </Typography>
-
-        {userInfo ? (
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Avatar>{userInfo.name[0]}</Avatar>
-          </IconButton>
-        ) : (
-          <div>{button}</div>
-        )}
-      </Toolbar>
-    </AppBar>}
+      {authState.isAuthenticated && <AppBar position="sticky">
+        <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
+          <Grid item xs={2}>
+            <Link to="/">
+              <img className={classes.logo} alt="Logo" src="/images/logo192.png" />
+            </Link>
+          </Grid>
+          <Grid item xs={8}>
+            <Typography
+              variant="h4"
+              color="inherit"
+              align="center"
+            >
+              Comicker
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <div>{button}</div>
+          </Grid>
+        </Grid>
+      </AppBar>}
     </>
   );
 };
