@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SketchPicker } from "react-color";
+import { CompactPicker } from "react-color";
 import CanvasDraw from "react-canvas-draw";
 import { Box, Button, IconButton, Slider, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -221,11 +221,12 @@ const PanelCreator = (props) => {
               onClick={onEraserSelected}
               isSelected={eraserSelected}
             />
-            <ToolButton icon={<UndoIcon />} onClick={onUndo} />
+            <ToolButton icon={<UndoIcon />} onClick={onUndo} />    
           </>
         )}
       </Toolbar>
-      {/* <SketchPicker color={selectedColor} onChangeComplete={onColorChange} /> */}
+      <CompactPicker color={penSelectedColor} onChangeComplete={onColorChange} />
+      
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
         <div id={"comicPanelImage"}>
           <Stage
@@ -292,7 +293,7 @@ const PanelCreator = (props) => {
           isSelected={!comicSpeechStageSelected}
         />
         <ToolButton
-          icon={<ChatBubbleOutlineIcon />}
+          icon={<TextFieldsIcon />}
           onClick={() => setComicSpeechStageSelected(true)}
           isSelected={comicSpeechStageSelected}
         />
