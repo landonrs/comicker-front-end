@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CompactPicker } from "react-color";
 import CanvasDraw from "react-canvas-draw";
-import { Box, Button, IconButton, Slider, Toolbar } from "@material-ui/core";
+import { Box, Button, Grid, IconButton, Slider, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateIcon from "@material-ui/icons/Create";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
@@ -172,59 +172,7 @@ const PanelCreator = (props) => {
 
   return (
     <div className={classes.panelRoot}>
-      <Toolbar>
-        {comicSpeechStageSelected ? (
-          <>
-            <ToolButton
-              icon={<TextFieldsIcon />}
-              onClick={() => setShowTextDialog(true)}
-            />
-            <ToolButton
-              icon={<ChatBubbleOutlineIcon />}
-              onClick={() => setShowBubbleSelectDialog(true)}
-            />
-            <ToolButton
-              icon={<ArrowUpwardOutlinedIcon />}
-              onClick={onSpeechItemMovedToFront}
-              disabled={!selectedDraggableItemId}
-            />
-            <ToolButton
-              icon={<ArrowDownwardOutlinedIcon />}
-              onClick={onSpeechItemMovedToBack}
-              disabled={!selectedDraggableItemId}
-            />
-            <ToolButton
-              icon={<DeleteForeverIcon />}
-              onClick={onDeleteSelectedItem}
-            />
-          </>
-        ) : (
-          <>
-            <Slider
-              className={classes.slider}
-              defaultValue={selectedBrushRadius}
-              aria-labelledby="brush-radius-slider"
-              valueLabelDisplay="auto"
-              step={1}
-              marks
-              min={1}
-              max={30}
-              onChange={(event, value) => setSelectedBrushRadius(value)}
-            />
-            <ToolButton
-              icon={<CreateIcon />}
-              onClick={onPenSelected}
-              isSelected={!eraserSelected}
-            />
-            <ToolButton
-              icon={<BiEraser />}
-              onClick={onEraserSelected}
-              isSelected={eraserSelected}
-            />
-            <ToolButton icon={<UndoIcon />} onClick={onUndo} />    
-          </>
-        )}
-      </Toolbar>
+      
       <CompactPicker color={penSelectedColor} onChangeComplete={onColorChange} />
       
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
@@ -297,6 +245,59 @@ const PanelCreator = (props) => {
           onClick={() => setComicSpeechStageSelected(true)}
           isSelected={comicSpeechStageSelected}
         />
+      </Toolbar>
+      <Toolbar>
+        {comicSpeechStageSelected ? (
+          <>
+            <ToolButton
+              icon={<TextFieldsIcon />}
+              onClick={() => setShowTextDialog(true)}
+            />
+            <ToolButton
+              icon={<ChatBubbleOutlineIcon />}
+              onClick={() => setShowBubbleSelectDialog(true)}
+            />
+            <ToolButton
+              icon={<ArrowUpwardOutlinedIcon />}
+              onClick={onSpeechItemMovedToFront}
+              disabled={!selectedDraggableItemId}
+            />
+            <ToolButton
+              icon={<ArrowDownwardOutlinedIcon />}
+              onClick={onSpeechItemMovedToBack}
+              disabled={!selectedDraggableItemId}
+            />
+            <ToolButton
+              icon={<DeleteForeverIcon />}
+              onClick={onDeleteSelectedItem}
+            />
+          </>
+        ) : (
+          <>
+            <Slider
+              className={classes.slider}
+              defaultValue={selectedBrushRadius}
+              aria-labelledby="brush-radius-slider"
+              valueLabelDisplay="auto"
+              step={1}
+              marks
+              min={1}
+              max={30}
+              onChange={(event, value) => setSelectedBrushRadius(value)}
+            />
+            <ToolButton
+              icon={<CreateIcon />}
+              onClick={onPenSelected}
+              isSelected={!eraserSelected}
+            />
+            <ToolButton
+              icon={<BiEraser />}
+              onClick={onEraserSelected}
+              isSelected={eraserSelected}
+            />
+            <ToolButton icon={<UndoIcon />} onClick={onUndo} />    
+          </>
+        )}
       </Toolbar>
 
       {/*speech item dialogs*/}
