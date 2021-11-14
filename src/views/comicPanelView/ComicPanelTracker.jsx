@@ -101,7 +101,8 @@ const ComicPanelTracker = (props) => {
       (panel) => panel.panelId === currentPanel.panelData.panelId
     );
 
-    return !(panelIndex < currentColumnPanels.length - 1)
+    // True if panel is last in array, or if we are switching panels and panel is not found in array
+    return !(panelIndex < currentColumnPanels.length - 1 && panelIndex !== -1)
   }
 
   const showPreviousPanel = (eventData) => {
@@ -114,7 +115,7 @@ const ComicPanelTracker = (props) => {
     );
 
     if (previousPanelNode) {
-      console.log("moving to previous panel", previousPanelNode);
+      // console.log("moving to previous panel", previousPanelNode);
       setLastChildPanelVisited(currentPanel);
       setSlideDirection(LEFT);
       // exit current panel
@@ -151,7 +152,7 @@ const ComicPanelTracker = (props) => {
       const childPanel = lastChildPanelVisited
         ? lastChildPanelVisited
         : childPanelNodes[0];
-      console.log("moving to next panel", childPanel);
+      // console.log("moving to next panel", childPanel);
       setSlideDirection(RIGHT);
       // exit current panel
       setSlideIn(false);
@@ -175,10 +176,10 @@ const ComicPanelTracker = (props) => {
     );
 
     if (panelIndex > 0) {
-      console.log(
-        "moving up to alternative panel",
-        currentColumnPanels[panelIndex - 1].panelData
-      );
+      // console.log(
+      //   "moving up to alternative panel",
+      //   currentColumnPanels[panelIndex - 1].panelData
+      // );
       // this is reset to avoid mismtched rows
       setLastChildPanelVisited(null);
 
@@ -200,10 +201,10 @@ const ComicPanelTracker = (props) => {
     );
 
     if (panelIndex < currentColumnPanels.length - 1) {
-      console.log(
-        "moving down to alternative panel",
-        currentColumnPanels[panelIndex + 1].panelData
-      );
+      // console.log(
+      //   "moving down to alternative panel",
+      //   currentColumnPanels[panelIndex + 1].panelData
+      // );
 
       // this is reset to avoid mismtched rows
       setLastChildPanelVisited(null);
@@ -257,7 +258,7 @@ const ComicPanelTracker = (props) => {
       setUserInfo(null);
     } else {
       authService.getUser().then((info) => {
-        console.log(info);
+        // console.log(info);
         setUserInfo(info);
         setUserHasVoted(userIdInPanelVotes(currentPanel.panelData, info))
       });
@@ -275,6 +276,8 @@ const ComicPanelTracker = (props) => {
             <Grid item justify="center">
               <IconButton
                 color={"primary"}
+                size={"small"}
+                style={{backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()) ? "white": "lightGrey"}}
                 disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()}
                 onClick={showAlternativeAbovePanel}
               >
@@ -286,6 +289,8 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
+                size={"small"}
+                style={{backgroundColor: (comicTreeLoading || panelIsFirstPanel(currentPanel)) ? "white": "lightGrey", marginLeft: "25%"}}
                 disabled={comicTreeLoading || panelIsFirstPanel(currentPanel)}
                 onClick={showPreviousPanel}
               >
@@ -312,6 +317,8 @@ const ComicPanelTracker = (props) => {
             <Grid item xs={2}>
               <IconButton
                 color={"primary"}
+                size={"small"}
+                style={{backgroundColor:  (comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)) ? "white": "lightGrey", marginLeft: "25%"}}
                 disabled={comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)}
                 onClick={showNextPanel}
               >
@@ -322,6 +329,8 @@ const ComicPanelTracker = (props) => {
               <Grid item justify="center">
                 <IconButton
                   color={"primary"}
+                  size={"small"}
+                  style={{backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()) ? "white": "lightGrey"}}
                   disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()}
                   onClick={showAlternativeBelowPanel}
                 >
