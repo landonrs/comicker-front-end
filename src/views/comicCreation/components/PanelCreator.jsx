@@ -231,7 +231,8 @@ const PanelCreator = (props) => {
           />
         </div>
       </Box>
-      <Toolbar>
+      <Box border={1} style={{marginBottom: 10}}>
+      <Toolbar variant={"dense"}>
         <ToolButton
           icon={<CreateIcon />}
           onClick={() => {
@@ -246,6 +247,7 @@ const PanelCreator = (props) => {
           isSelected={comicSpeechStageSelected}
         />
       </Toolbar>
+      
       <Toolbar>
         {comicSpeechStageSelected ? (
           <>
@@ -299,6 +301,19 @@ const PanelCreator = (props) => {
           </>
         )}
       </Toolbar>
+      </Box>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          setSelectedDraggableItemId(null);
+          onUpload();
+        }}
+      >
+        Upload
+      </Button>
+      
 
       {/*speech item dialogs*/}
       <TextSelectDialog
@@ -311,16 +326,7 @@ const PanelCreator = (props) => {
         onClose={() => setShowBubbleSelectDialog(false)}
         onConfirm={onSpeechBubbleSelected}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setSelectedDraggableItemId(null);
-          onUpload();
-        }}
-      >
-        Upload
-      </Button>
+      
     </div>
   );
 };
