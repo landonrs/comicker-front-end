@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Grid,
-  Typography,
 } from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,9 +12,9 @@ const useStyles = makeStyles({
   root: {
     height: "100%",
   },
-  logo: { height: 34, marginLeft: "25%" },
+  logo: { height: 34, marginLeft: "35%" },
   comicRow: { height: 100 },
-  headerText: { marginLeft: "15%", marginRight: "10%" },
+  headerText: { height: 40, padding: 10 },
 });
 
 const HeaderBar = () => {
@@ -58,20 +57,18 @@ const HeaderBar = () => {
   return (
     <>
       {authState.isAuthenticated && <AppBar position="sticky">
-        <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
+        <Grid container direction="row" alignItems="center" justify="center" xs={12} spacing={0}>
           <Grid item xs={2}>
             <Link to="/">
-              <img className={classes.logo} alt="Logo" src="/images/logo192.png" />
+              <img className={classes.logo} alt="Logo" src="/images/comicker-logo-c.png" />
             </Link>
           </Grid>
-          <Grid item xs={8}>
-            <Typography
-              variant="h4"
-              color="inherit"
-              align="center"
-            >
-              Comicker
-            </Typography>
+          <Grid item xs={7}>
+            <Grid container direction="column" item xs={12} align="center">
+              <div>
+                <img className={classes.headerText} alt="Logo" src="/images/comicker-logo-main.png" />
+              </div>
+            </Grid>
           </Grid>
           <Grid item xs={2}>
             <div>{button}</div>

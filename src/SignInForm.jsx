@@ -7,7 +7,6 @@ import {
   Grid,
   Paper,
   TextField,
-  Typography,
 } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -72,40 +71,35 @@ const SignInForm = ({ issuer }) => {
     <Paper className={classes.root}>
       <Grid container direction="column" item xs={12} align="center">
         <Grid item justify="center" style={{ marginTop: "30%" }}>
-          <Typography
-            variant="h2"
-            color="inherit"
-            align="center"
-            style={{ color: "white" }}
-          >
-            Comicker
-          </Typography>
+          <div >
+            <img width={250} alt="Logo" src="/images/comicker-logo-main.png" />
+          </div>
         </Grid>
         <form onSubmit={handleSubmit}>
-        <Grid item justify="center">
-          <TextField
-            className={classes.formInput}
-            id="username"
-            type="text"
-            label={"Username:"}
-            value={username}
-            onChange={handleUsernameChange}
-            variant="filled"
-          />
+          <Grid item justify="center">
+            <TextField
+              className={classes.formInput}
+              id="username"
+              type="text"
+              label={"Username:"}
+              value={username}
+              onChange={handleUsernameChange}
+              variant="filled"
+            />
           </Grid>
           <Grid item justify="center">
-          <TextField
-            className={classes.formInput}
-            id="password"
-            type="password"
-            label={"Password:"}
-            value={password}
-            onChange={handlePasswordChange}
-            variant="filled"
-          />
+            <TextField
+              className={classes.formInput}
+              id="password"
+              type="password"
+              label={"Password:"}
+              value={password}
+              onChange={handlePasswordChange}
+              variant="filled"
+            />
           </Grid>
           <Grid item justify="center" style={{ marginTop: "5%" }}>
-          <Button className={classes.loginButton} fullWidth={true} id="submit" type="submit">Login</Button>
+            <Button className={classes.loginButton} fullWidth={true} id="submit" type="submit">Login</Button>
           </Grid>
         </form>
       </Grid>
