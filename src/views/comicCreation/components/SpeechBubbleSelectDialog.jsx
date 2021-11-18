@@ -10,18 +10,44 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const THOUGHT_BUBBLE_URL = "/images/thought_bubble.png";
-const SPEECH_BUBBLE_URL = "/images/speechBubble.png";
 
 const BUBBLE_TYPES = [
   {
-    src: THOUGHT_BUBBLE_URL,
-    id: "thoughtBubble1",
+    src: "/images/SB-1.png",
+    id: "SB-1"
   },
   {
-    src: SPEECH_BUBBLE_URL,
-    id: "speechBubble1",
+    src: "/images/SB-2.png",
+    id: "SB-2"
   },
+  {
+    src: "/images/SB-3.png",
+    id: "SB-3"
+  },
+  {
+    src: "/images/SB-4.png",
+    id: "SB-4"
+  },
+  {
+    src: "/images/SB-5.png",
+    id: "SB-5"
+  },
+  {
+    src: "/images/SB-6.png",
+    id: "SB-6"
+  },
+  {
+    src: "/images/SB-7.png",
+    id: "SB-7"
+  },
+  {
+    src: "/images/SB-8.png",
+    id: "SB-8"
+  },
+  {
+    src: "/images/SB-9.png",
+    id: "SB-9"
+  }
 ];
 
 const useStyles = makeStyles({
