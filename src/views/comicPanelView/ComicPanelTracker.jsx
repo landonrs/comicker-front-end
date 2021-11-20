@@ -58,6 +58,9 @@ const ComicPanelTracker = (props) => {
   const [currentPanel, setCurrentPanel] = useState(
     getStartingPanel(location.state.comicData)
   );
+  // 0 based index used to make sure users cannot chain more than 4 panels together
+  const [currentColumnIndex, setCurrentColumnIndex] = useState(0)
+
   const [panelVoteCount, setPanelVoteCount] = useState(
     currentPanel.panelData.voterIds.length
   );
@@ -126,6 +129,7 @@ const ComicPanelTracker = (props) => {
       setCurrentColumnPanels(
         comicTree.getChildPanels(previousPanelNode.parentId)
       );
+      setCurrentColumnIndex((currentIndex) => currentIndex - 1)
 
       setTransitionTimeout(RIGHT, previousPanelNode);
     }
@@ -161,6 +165,7 @@ const ComicPanelTracker = (props) => {
       setSlideIn(false);
 
       setCurrentColumnPanels(childPanelNodes);
+      setCurrentColumnIndex((currentIndex) => currentIndex + 1)
 
       // this is reset to avoid user being able to scroll to right infinitely
       setLastChildPanelVisited(null);
@@ -349,7 +354,7 @@ const ComicPanelTracker = (props) => {
       <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
         <Grid className={classes.arrow} item xs={1}>
           <IconButton
-            color={userHasVoted ? "secondary" : "default"}
+            style={{color: userHasVoted ? "green": "grey"}}
             disabled={!userInfo}
             onClick={() => {
               if (!userHasVoted) {
@@ -363,7 +368,8 @@ const ComicPanelTracker = (props) => {
         <Grid item xs={1}>
           <Typography style={{ marginLeft: "50%" }} variant="h6">{panelVoteCount}</Typography>
         </Grid>
-        <Grid item xs={4}>
+        {/* do not let the user chain more than 4 panels together */}
+        {currentColumnIndex != 3 && <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
@@ -372,6 +378,7 @@ const ComicPanelTracker = (props) => {
             Add Next Panel
           </Button>
         </Grid>
+        }
         <Grid item xs={6}>
           {!panelIsFirstPanel(currentPanel) && (
             <Button
