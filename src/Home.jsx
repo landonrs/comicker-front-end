@@ -70,7 +70,7 @@ const Home = () => {
         {comics && comics.map((comicData) => {
           console.log("setting comic panel");
           return (
-            <Container maxWidth="xs" key={comicData.comic.title}>
+            <Container maxWidth="xs" key={comicData.title}>
               <Card>
                 <CardActionArea
                   onClick={(event) =>
@@ -80,7 +80,7 @@ const Home = () => {
                     })
                   }
                 >
-                  <Typography>{comicData.comic.title}</Typography>
+                  <Typography>{comicData.title}</Typography>
                   <img
                     className={classes.comicRow}
                     alt="comic"
@@ -128,14 +128,16 @@ const Home = () => {
           showLabels
         >
           <BottomNavigationAction
-            label="Start a comic"
             icon={
               <IconButton onClick={() => history.push("/create")}>
                 <CreateIcon />
+                <Typography color={"primary"}>Click here to start a comic</Typography>
               </IconButton>
             }
           />
+          
         </BottomNavigation>
+        
       </Paper>
     </>
   );

@@ -74,7 +74,7 @@ class ComicTree {
 
 const buildComicTree = (comicData) => {
   var nodeList = [];
-  const comicPanels = comicData.comic.panels;
+  const comicPanels = comicData.panels;
   // Add starting panel
   const startingPanel = comicPanels[0];
   addChildrenNodesToTree(startingPanel, ROOT_NODE_ID, nodeList);

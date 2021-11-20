@@ -12,7 +12,7 @@ import {
 import { getStartingPanel } from "../../utils/comic-navigation-helper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSwipeable } from "react-swipeable";
-import {ComicTree, ROOT_NODE_ID} from "../../utils/comic-tree";
+import { ComicTree, ROOT_NODE_ID } from "../../utils/comic-tree";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
@@ -75,6 +75,8 @@ const ComicPanelTracker = (props) => {
   const [slideDirection, setSlideDirection] = useState(RIGHT);
   const [slideIn, setSlideIn] = useState(true);
 
+  const [imageLoading, setImageLoading] = useState(false)
+
 
   const panelIsFirstPanel = (panel) => {
     return !(panel.parentId && panel.parentId !== ROOT_NODE_ID)
@@ -134,6 +136,7 @@ const ComicPanelTracker = (props) => {
       setSlideDirection(direction);
       setCurrentPanel(newPanel);
       setSlideIn(true);
+      setImageLoading(true)
       setUserHasVoted(userIdInPanelVotes(newPanel.panelData, userInfo));
       setPanelVoteCount(newPanel.panelData.voterIds.length);
     }, 250);
@@ -277,7 +280,7 @@ const ComicPanelTracker = (props) => {
               <IconButton
                 color={"primary"}
                 size={"small"}
-                style={{backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()) ? "white": "lightGrey"}}
+                style={{ backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()) ? "white" : "lightGrey" }}
                 disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelAbove()}
                 onClick={showAlternativeAbovePanel}
               >
@@ -290,7 +293,7 @@ const ComicPanelTracker = (props) => {
               <IconButton
                 color={"primary"}
                 size={"small"}
-                style={{backgroundColor: (comicTreeLoading || panelIsFirstPanel(currentPanel)) ? "white": "lightGrey", marginLeft: "25%"}}
+                style={{ backgroundColor: (comicTreeLoading || panelIsFirstPanel(currentPanel)) ? "white" : "lightGrey", marginLeft: "25%" }}
                 disabled={comicTreeLoading || panelIsFirstPanel(currentPanel)}
                 onClick={showPreviousPanel}
               >
@@ -309,6 +312,7 @@ const ComicPanelTracker = (props) => {
                       className={classes.panelImage}
                       src={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
                       alt="comic"
+                      onLoad={() => setImageLoading(false)}
                     />
                   </Box>
                 </div>
@@ -318,7 +322,7 @@ const ComicPanelTracker = (props) => {
               <IconButton
                 color={"primary"}
                 size={"small"}
-                style={{backgroundColor:  (comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)) ? "white": "lightGrey", marginLeft: "25%"}}
+                style={{ backgroundColor: (comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)) ? "white" : "lightGrey", marginLeft: "25%" }}
                 disabled={comicTreeLoading || panelDoesNotHaveChildPanels(currentPanel)}
                 onClick={showNextPanel}
               >
@@ -330,7 +334,7 @@ const ComicPanelTracker = (props) => {
                 <IconButton
                   color={"primary"}
                   size={"small"}
-                  style={{backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()) ? "white": "lightGrey"}}
+                  style={{ backgroundColor: (comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()) ? "white" : "lightGrey" }}
                   disabled={comicTreeLoading || panelDoesNotHaveAlternativePanelBelow()}
                   onClick={showAlternativeBelowPanel}
                 >
@@ -349,7 +353,7 @@ const ComicPanelTracker = (props) => {
             disabled={!userInfo}
             onClick={() => {
               if (!userHasVoted) {
-              onVote(currentPanel.panelData.panelId)
+                onVote(currentPanel.panelData.panelId)
               }
             }}
           >
@@ -357,7 +361,7 @@ const ComicPanelTracker = (props) => {
           </IconButton>
         </Grid>
         <Grid item xs={1}>
-          <Typography style={{marginLeft: "50%"}} variant="h6">{panelVoteCount}</Typography>
+          <Typography style={{ marginLeft: "50%" }} variant="h6">{panelVoteCount}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Button
@@ -369,7 +373,7 @@ const ComicPanelTracker = (props) => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          { !panelIsFirstPanel(currentPanel) && (
+          {!panelIsFirstPanel(currentPanel) && (
             <Button
               variant="contained"
               color="primary"
