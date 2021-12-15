@@ -34,7 +34,7 @@ const useStyles = makeStyles({
   canvasBorder: {
     display: "inline-block",
   },
-  panelImage: { width: "100%", marginTop: "0%" },
+  panelImage: { width: "100%", marginTop: "0%" }
 });
 
 const userIdInPanelVotes = (panelData, userInfo) => {
@@ -320,7 +320,7 @@ const ComicPanelTracker = (props) => {
                     />}
                     <img
                       className={classes.panelImage}
-                      style={imageLoading ? {display: 'none'} : {}}
+                      style={imageLoading ? { display: 'none' } : {}}
                       src={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
                       alt="comic"
                       onLoad={() => setImageLoading(false)}
@@ -357,22 +357,18 @@ const ComicPanelTracker = (props) => {
           </Grid>
         </Card>
       </Paper>
-      <Grid container direction="row" alignItems="center" xs={12} spacing={2}>
-        <Grid className={classes.arrow} item xs={1}>
-          <IconButton
-            style={{color: userHasVoted ? "green": "grey"}}
-            disabled={!userInfo}
+      <Grid container direction="row" alignItems="center" justify="center" xs={12} spacing={2}>
+        <Grid item xs={4}>
+          <Button variant="contained"
+            style={{ color: "white", backgroundColor: userHasVoted ? "green" : "grey" }}
+            startIcon={<ArrowUpwardIcon />}
             onClick={() => {
               if (!userHasVoted) {
                 onVote(currentPanel.panelData.panelId)
               }
-            }}
-          >
-            <ArrowUpwardIcon />
-          </IconButton>
-        </Grid>
-        <Grid item xs={1}>
-          <Typography style={{ marginLeft: "50%" }} variant="h6">{panelVoteCount}</Typography>
+            }}>
+            {userHasVoted ? "voted" : "vote"} {panelVoteCount}
+          </Button>
         </Grid>
         {/* do not let the user chain more than 4 panels together */}
         {currentColumnIndex != 3 && <Grid item xs={4}>
@@ -385,7 +381,7 @@ const ComicPanelTracker = (props) => {
           </Button>
         </Grid>
         }
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           {!panelIsFirstPanel(currentPanel) && (
             <Button
               variant="contained"
