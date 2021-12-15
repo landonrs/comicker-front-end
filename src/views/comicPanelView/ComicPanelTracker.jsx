@@ -143,7 +143,7 @@ const ComicPanelTracker = (props) => {
       setImageLoading(true)
       setUserHasVoted(userIdInPanelVotes(newPanel.panelData, userInfo));
       setPanelVoteCount(newPanel.panelData.voterIds.length);
-    }, 250);
+    }, 300);
   };
 
   const showNextPanel = (eventData) => {
@@ -313,8 +313,14 @@ const ComicPanelTracker = (props) => {
                     disableGutters={true}
                     border={5}
                   >
+                    {imageLoading && <img
+                      className={classes.panelImage}
+                      src={`/images/blank-loading.png`}
+                      alt="loading panel"
+                    />}
                     <img
                       className={classes.panelImage}
+                      style={imageLoading ? {display: 'none'} : {}}
                       src={`https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${currentPanel.panelData.panelId}.jpg`}
                       alt="comic"
                       onLoad={() => setImageLoading(false)}
