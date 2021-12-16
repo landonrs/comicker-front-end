@@ -52,7 +52,7 @@ const BUBBLE_TYPES = [
 
 const useStyles = makeStyles({
   bubbleItem: { width: "30px", height: "30px" },
-  selectedBubbleDisplay: { height: "100px", margin: "15px" },
+  selectedBubbleDisplay: { height: "200px", margin: "15px" },
 });
 
 const SpeechBubbleSelectDialog = (props) => {
