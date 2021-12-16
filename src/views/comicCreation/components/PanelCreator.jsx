@@ -15,6 +15,7 @@ import { SpeechBubbleImage, TextItem } from "./SpeechBubbleHelper";
 import { Stage, Layer } from "react-konva";
 import TextSelectDialog from "./TextSelectDialog";
 import SpeechBubbleSelectDialog from "./SpeechBubbleSelectDialog";
+import ParentPanelDialog from "./ParentPanelDialog";
 
 const WHITE = "#FFFFFF";
 
@@ -45,7 +46,7 @@ const ToolButton = (props) => {
 };
 
 const PanelCreator = (props) => {
-  const { onUpload } = props;
+  const { onUpload, parentPanelUrl } = props;
   // state for the drawable canvas
   const [penSelectedColor, setPenSelectedColor] = useState("#444");
   const [eraserSelected, setEraserSelected] = useState(false);
@@ -60,6 +61,7 @@ const PanelCreator = (props) => {
     useState(false);
   const [showTextDialog, setShowTextDialog] = useState(false);
   const [showBubbleSelectDialog, setShowBubbleSelectDialog] = useState(false);
+  const [showParentPanelDialog, setShowParentPanelDialog] = useState(false);
 
   const [selectedDraggableItemId, setSelectedDraggableItemId] = React.useState(null);
 
@@ -170,10 +172,23 @@ const PanelCreator = (props) => {
     canvasRef.undo();
   };
 
+  const onCopyParentPanel = () => {
+    // TODO - fill this out
+  }
+
   return (
     <div className={classes.panelRoot}>
       
       <CompactPicker color={penSelectedColor} onChangeComplete={onColorChange} />
+      {parentPanelUrl && 
+      <Button
+        variant="contained"
+        color="primary"
+        style={{margin: "5px"}}
+        onClick={() => setShowParentPanelDialog(true)}
+      >
+        Show previous panel
+      </Button>}
       
       <Box className={classes.canvasBorder} disableGutters={true} border={5}>
         <div id={"comicPanelImage"}>
@@ -326,6 +341,13 @@ const PanelCreator = (props) => {
         onClose={() => setShowBubbleSelectDialog(false)}
         onConfirm={onSpeechBubbleSelected}
       />
+
+      <ParentPanelDialog
+      parentPanelUrl={parentPanelUrl}
+      open={showParentPanelDialog}
+      onClose={() => setShowParentPanelDialog(false)}
+      onConfirm={onCopyParentPanel}
+    /> 
       
     </div>
   );

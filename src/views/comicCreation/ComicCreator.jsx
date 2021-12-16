@@ -72,7 +72,7 @@ const ComicCreator = () => {
   return (
     <div>
       <Grid container direction="column" item xs={12} align="center">
-      <PanelCreator onUpload={saveAndConfirm}/>
+      <PanelCreator parentPanelUrl={comicId ? `https://comicker-comic-panels.s3.amazonaws.com/comics/${comicId}/${panelId}.jpg` : null} onUpload={saveAndConfirm}/>
       </Grid>
       <Dialog
         onClose={() => setDisplayConfirmDialog(false)}
