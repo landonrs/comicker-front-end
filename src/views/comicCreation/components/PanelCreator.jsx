@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CompactPicker } from "react-color";
 import CanvasDraw from "react-canvas-draw";
-import { Box, Button, Grid, IconButton, Slider, Toolbar } from "@material-ui/core";
+import { Box, Button, IconButton, Slider, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateIcon from "@material-ui/icons/Create";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
@@ -52,6 +52,7 @@ const PanelCreator = (props) => {
   const [eraserSelected, setEraserSelected] = useState(false);
   const [canvasRef, setCanvasRef] = useState(null);
   const [selectedBrushRadius, setSelectedBrushRadius] = useState(1);
+  const [copyParentPanel, setCopyParentPanel] = useState(false);
 
   // state for the speech items
   const [draggableItems, setDraggableItems] = useState([]);
@@ -173,7 +174,7 @@ const PanelCreator = (props) => {
   };
 
   const onCopyParentPanel = () => {
-    // TODO - fill this out
+    setCopyParentPanel(true)
   }
 
   return (
@@ -243,6 +244,8 @@ const PanelCreator = (props) => {
             canvasHeight={300}
             lazyRadius={0}
             hideInterface={true}
+            // Adding the ?1 here because the browser cache prevents the image from rendering without it
+            imgSrc={copyParentPanel ? `${parentPanelUrl}?1` : ""}
           />
         </div>
       </Box>

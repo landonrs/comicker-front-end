@@ -25,14 +25,17 @@ const ParentPanelDialog = (props) => {
         />
       </DialogContent>
       <DialogActions>
-          {/* TODO: to be activated when I support copying the panels */}
-        {/* <Button
+        <Button
           variant="contained"
           color="primary"
-          onClick={() => onConfirm()}
+          onClick={() => {
+              onConfirm()
+              onClose()
+          }
+        }
         >
           Copy panel
-        </Button> */}
+        </Button>
         <Button variant="contained" color="primary" onClick={() => onClose()}>
           Close
         </Button>
