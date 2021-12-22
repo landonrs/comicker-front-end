@@ -58,17 +58,19 @@ const HeaderBar = () => {
     <>
       {authState.isAuthenticated && <AppBar position="sticky">
         <Grid container direction="row" alignItems="center" justify="center" xs={12} spacing={0}>
-          <Grid item xs={2}>
-            <Link to="/">
-              <img className={classes.logo} alt="Logo" src="/images/comicker-logo-c.png" />
-            </Link>
-          </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={4}>
             <Grid container direction="column" item xs={12} align="center">
               <div>
+              <Link to="/">
                 <img className={classes.headerText} alt="Logo" src="/images/comicker-logo-main.png" />
+              </Link>
               </div>
             </Grid>
+          </Grid>
+          {/* spacer */}
+          <Grid item xs={6}>
+            <div>
+            </div>
           </Grid>
           <Grid item xs={2}>
             <div>{button}</div>
