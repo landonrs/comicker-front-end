@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
-  Grid,
+  Grid
 } from "@material-ui/core";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useOktaAuth } from "@okta/okta-react";
 import { setAccessToken } from "../utils/api-client";
+import AccountMenu from "./AccountMenu";
 
 const useStyles = makeStyles({
   root: {
@@ -19,7 +20,6 @@ const useStyles = makeStyles({
 
 const HeaderBar = () => {
   const classes = useStyles();
-  const history = useHistory();
   const { authState, authService } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
 
@@ -35,24 +35,6 @@ const HeaderBar = () => {
       });
     }
   }, [authState, authService]);
-
-  const button = authState.isAuthenticated ? (
-    <button
-      onClick={() => {
-        authService.logout();
-      }}
-    >
-      Logout
-    </button>
-  ) : (
-    <button
-      onClick={() => {
-        history.push("/login");
-      }}
-    >
-      Login
-    </button>
-  );
 
   return (
     <>
@@ -73,7 +55,7 @@ const HeaderBar = () => {
             </div>
           </Grid>
           <Grid item xs={2}>
-            <div>{button}</div>
+            <AccountMenu />
           </Grid>
         </Grid>
       </AppBar>}
