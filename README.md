@@ -1,2 +1,3 @@
-Notes to remember to run this stupid thing:
-run the local backend
+# Comicker Front End
+
+Defines the React Components and JavaScript used to run the Front End of Comicker.
